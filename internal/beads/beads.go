@@ -383,6 +383,88 @@ func (b *Beads) IsBeadsRepo() bool {
 	return err == nil || !errors.Is(err, ErrNotARepo)
 }
 
+// StatusPinned is the status for pinned beads that never get closed.
+const StatusPinned = "pinned"
+
+// HandoffBeadTitle returns the well-known title for a role's handoff bead.
+func HandoffBeadTitle(role string) string {
+	return role + " Handoff"
+}
+
+// FindHandoffBead finds the pinned handoff bead for a role by title.
+// Returns nil if not found (not an error).
+func (b *Beads) FindHandoffBead(role string) (*Issue, error) {
+	issues, err := b.List(ListOptions{Status: StatusPinned, Priority: -1})
+	if err != nil {
+		return nil, fmt.Errorf("listing pinned issues: %w", err)
+	}
+
+	targetTitle := HandoffBeadTitle(role)
+	for _, issue := range issues {
+		if issue.Title == targetTitle {
+			return issue, nil
+		}
+	}
+
+	return nil, nil
+}
+
+// GetOrCreateHandoffBead returns the handoff bead for a role, creating it if needed.
+func (b *Beads) GetOrCreateHandoffBead(role string) (*Issue, error) {
+	// Check if it exists
+	existing, err := b.FindHandoffBead(role)
+	if err != nil {
+		return nil, err
+	}
+	if existing != nil {
+		return existing, nil
+	}
+
+	// Create new handoff bead
+	issue, err := b.Create(CreateOptions{
+		Title:       HandoffBeadTitle(role),
+		Type:        "task",
+		Priority:    2,
+		Description: "", // Empty until first handoff
+	})
+	if err != nil {
+		return nil, fmt.Errorf("creating handoff bead: %w", err)
+	}
+
+	// Update to pinned status
+	status := StatusPinned
+	if err := b.Update(issue.ID, UpdateOptions{Status: &status}); err != nil {
+		return nil, fmt.Errorf("setting handoff bead to pinned: %w", err)
+	}
+
+	// Re-fetch to get updated status
+	return b.Show(issue.ID)
+}
+
+// UpdateHandoffContent updates the handoff bead's description with new content.
+func (b *Beads) UpdateHandoffContent(role, content string) error {
+	issue, err := b.GetOrCreateHandoffBead(role)
+	if err != nil {
+		return err
+	}
+
+	return b.Update(issue.ID, UpdateOptions{Description: &content})
+}
+
+// ClearHandoffContent clears the handoff bead's description.
+func (b *Beads) ClearHandoffContent(role string) error {
+	issue, err := b.FindHandoffBead(role)
+	if err != nil {
+		return err
+	}
+	if issue == nil {
+		return nil // Nothing to clear
+	}
+
+	empty := ""
+	return b.Update(issue.ID, UpdateOptions{Description: &empty})
+}
+
 // MRFields holds the structured fields for a merge-request issue.
 // These fields are stored as key: value lines in the issue description.
 type MRFields struct {

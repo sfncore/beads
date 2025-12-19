@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/steveyegge/gastown/internal/beads"
 	"github.com/steveyegge/gastown/internal/style"
 	"github.com/steveyegge/gastown/internal/templates"
 	"github.com/steveyegge/gastown/internal/workspace"
@@ -71,7 +72,14 @@ func runPrime(cmd *cobra.Command, args []string) error {
 	ctx := detectRole(cwd, townRoot)
 
 	// Output context
-	return outputPrimeContext(ctx)
+	if err := outputPrimeContext(ctx); err != nil {
+		return err
+	}
+
+	// Output handoff content if present
+	outputHandoffContent(ctx)
+
+	return nil
 }
 
 func detectRole(cwd, townRoot string) RoleContext {
@@ -306,4 +314,32 @@ func outputUnknownContext(ctx RoleContext) {
 	fmt.Println("- Town root or `mayor/` - Mayor role")
 	fmt.Println()
 	fmt.Printf("Town root: %s\n", style.Dim.Render(ctx.TownRoot))
+}
+
+// outputHandoffContent reads and displays the pinned handoff bead for the role.
+func outputHandoffContent(ctx RoleContext) {
+	if ctx.Role == RoleUnknown {
+		return
+	}
+
+	// Get role key for handoff bead lookup
+	roleKey := string(ctx.Role)
+
+	bd := beads.New(ctx.TownRoot)
+	issue, err := bd.FindHandoffBead(roleKey)
+	if err != nil {
+		// Silently skip if beads lookup fails (might not be a beads repo)
+		return
+	}
+	if issue == nil || issue.Description == "" {
+		// No handoff content
+		return
+	}
+
+	// Display handoff content
+	fmt.Println()
+	fmt.Printf("%s\n\n", style.Bold.Render("## 🤝 Handoff from Previous Session"))
+	fmt.Println(issue.Description)
+	fmt.Println()
+	fmt.Println(style.Dim.Render("(Clear with: gt rig reset --handoff)"))
 }

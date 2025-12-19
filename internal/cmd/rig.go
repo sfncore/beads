@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/steveyegge/gastown/internal/beads"
 	"github.com/steveyegge/gastown/internal/config"
 	"github.com/steveyegge/gastown/internal/git"
 	"github.com/steveyegge/gastown/internal/rig"
@@ -63,10 +64,25 @@ var rigRemoveCmd = &cobra.Command{
 	RunE:  runRigRemove,
 }
 
+var rigResetCmd = &cobra.Command{
+	Use:   "reset",
+	Short: "Reset rig state (handoff content, etc.)",
+	Long: `Reset various rig state.
+
+By default, resets all resettable state. Use flags to reset specific items.
+
+Examples:
+  gt rig reset              # Reset all state
+  gt rig reset --handoff    # Clear handoff content only`,
+	RunE: runRigReset,
+}
+
 // Flags
 var (
-	rigAddPrefix string
-	rigAddCrew   string
+	rigAddPrefix    string
+	rigAddCrew      string
+	rigResetHandoff bool
+	rigResetRole    string
 )
 
 func init() {
@@ -74,9 +90,13 @@ func init() {
 	rigCmd.AddCommand(rigAddCmd)
 	rigCmd.AddCommand(rigListCmd)
 	rigCmd.AddCommand(rigRemoveCmd)
+	rigCmd.AddCommand(rigResetCmd)
 
 	rigAddCmd.Flags().StringVar(&rigAddPrefix, "prefix", "", "Beads issue prefix (default: derived from name)")
 	rigAddCmd.Flags().StringVar(&rigAddCrew, "crew", "main", "Default crew workspace name")
+
+	rigResetCmd.Flags().BoolVar(&rigResetHandoff, "handoff", false, "Clear handoff content")
+	rigResetCmd.Flags().StringVar(&rigResetRole, "role", "", "Role to reset (default: auto-detect from cwd)")
 }
 
 func runRigAdd(cmd *cobra.Command, args []string) error {
@@ -234,6 +254,45 @@ func runRigRemove(cmd *cobra.Command, args []string) error {
 	fmt.Printf("%s Rig %s removed from registry\n", style.Success.Render("✓"), name)
 	fmt.Printf("\nNote: Files at %s were NOT deleted.\n", filepath.Join(townRoot, name))
 	fmt.Printf("To delete: %s\n", style.Dim.Render(fmt.Sprintf("rm -rf %s", filepath.Join(townRoot, name))))
+
+	return nil
+}
+
+func runRigReset(cmd *cobra.Command, args []string) error {
+	// Find workspace
+	townRoot, err := workspace.FindFromCwdOrError()
+	if err != nil {
+		return fmt.Errorf("not in a Gas Town workspace: %w", err)
+	}
+
+	cwd, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("getting current directory: %w", err)
+	}
+
+	// Determine role to reset
+	roleKey := rigResetRole
+	if roleKey == "" {
+		// Auto-detect from cwd
+		ctx := detectRole(cwd, townRoot)
+		if ctx.Role == RoleUnknown {
+			return fmt.Errorf("could not detect role from current directory; use --role to specify")
+		}
+		roleKey = string(ctx.Role)
+	}
+
+	// If no specific flags, reset all; otherwise only reset what's specified
+	resetAll := !rigResetHandoff
+
+	bd := beads.New(townRoot)
+
+	// Reset handoff content
+	if resetAll || rigResetHandoff {
+		if err := bd.ClearHandoffContent(roleKey); err != nil {
+			return fmt.Errorf("clearing handoff content: %w", err)
+		}
+		fmt.Printf("%s Cleared handoff content for %s\n", style.Success.Render("✓"), roleKey)
+	}
 
 	return nil
 }

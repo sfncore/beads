@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/steveyegge/gastown/internal/beads"
 	"github.com/steveyegge/gastown/internal/style"
 	"github.com/steveyegge/gastown/internal/workspace"
 )
@@ -95,12 +96,12 @@ func runHandoff(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	// For cycle, send handoff mail to self
+	// For cycle, update handoff bead for successor
 	if action == HandoffCycle {
 		if err := sendHandoffMail(role, townRoot); err != nil {
-			return fmt.Errorf("sending handoff mail: %w", err)
+			return fmt.Errorf("updating handoff bead: %w", err)
 		}
-		fmt.Printf("%s Sent handoff mail to self\n", style.Bold.Render("✓"))
+		fmt.Printf("%s Updated handoff bead for successor\n", style.Bold.Render("✓"))
 	}
 
 	// Send lifecycle request to manager
@@ -226,12 +227,9 @@ func getManager(role Role) string {
 	case RoleMayor, RoleWitness:
 		return "daemon/"
 	case RolePolecat, RoleRefinery:
-		// Detect rig from environment or working directory
-		rigName := detectRigName()
-		if rigName != "" {
-			return rigName + "/witness"
-		}
-		return "witness/" // fallback
+		// Would need rig context to determine witness address
+		// For now, use a placeholder pattern
+		return "<rig>/witness"
 	case RoleCrew:
 		return "human" // Crew is human-managed
 	default:
@@ -239,59 +237,12 @@ func getManager(role Role) string {
 	}
 }
 
-// detectRigName detects the rig name from environment or directory context.
-func detectRigName() string {
-	// Check environment variable first
-	if rig := os.Getenv("GT_RIG"); rig != "" {
-		return rig
-	}
-
-	// Try to detect from tmux session name (format: gt-<rig>-<polecat>)
-	out, err := exec.Command("tmux", "display-message", "-p", "#{session_name}").Output()
-	if err == nil {
-		sessionName := strings.TrimSpace(string(out))
-		if strings.HasPrefix(sessionName, "gt-") {
-			parts := strings.SplitN(sessionName, "-", 3)
-			if len(parts) >= 2 {
-				return parts[1]
-			}
-		}
-	}
-
-	// Try to detect from working directory
-	cwd, err := os.Getwd()
-	if err != nil {
-		return ""
-	}
-
-	// Look for "polecats" in path: .../rig/polecats/polecat/...
-	if idx := strings.Index(cwd, "/polecats/"); idx != -1 {
-		// Extract rig name from path before /polecats/
-		rigPath := cwd[:idx]
-		return filepath.Base(rigPath)
-	}
-
-	return ""
-}
-
-// sendHandoffMail sends a handoff message to ourselves for the successor to read.
+// sendHandoffMail updates the pinned handoff bead for the successor to read.
 func sendHandoffMail(role Role, townRoot string) error {
-	// Determine our address
-	var selfAddr string
-	switch role {
-	case RoleMayor:
-		selfAddr = "mayor/"
-	case RoleWitness:
-		selfAddr = "witness/" // Would need rig prefix
-	default:
-		selfAddr = string(role) + "/"
-	}
-
-	// Build handoff message
-	subject := "🤝 HANDOFF: Session cycling"
-	body := handoffMessage
-	if body == "" {
-		body = fmt.Sprintf(`Handoff from previous session.
+	// Build handoff content
+	content := handoffMessage
+	if content == "" {
+		content = fmt.Sprintf(`🤝 HANDOFF: Session cycling
 
 Time: %s
 Role: %s
@@ -302,15 +253,14 @@ Check gt mail inbox for messages received during transition.
 `, time.Now().Format(time.RFC3339), role)
 	}
 
-	// Send via bd mail (syntax: bd mail send <recipient> -s <subject> -m <body>)
-	cmd := exec.Command("bd", "mail", "send", selfAddr,
-		"-s", subject,
-		"-m", body,
-	)
-	cmd.Dir = townRoot
+	// Determine the handoff role key
+	// For role-specific handoffs, use the role name
+	roleKey := string(role)
 
-	if out, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("%w: %s", err, string(out))
+	// Update the pinned handoff bead
+	bd := beads.New(townRoot)
+	if err := bd.UpdateHandoffContent(roleKey, content); err != nil {
+		return fmt.Errorf("updating handoff bead: %w", err)
 	}
 
 	return nil
@@ -324,26 +274,19 @@ func sendLifecycleRequest(manager string, role Role, action HandoffAction, townR
 		return nil
 	}
 
-	// Get polecat name for identification
-	polecatName := detectPolecatName()
-	rigName := detectRigName()
-
 	subject := fmt.Sprintf("LIFECYCLE: %s requesting %s", role, action)
 	body := fmt.Sprintf(`Lifecycle request from %s.
 
 Action: %s
-Rig: %s
-Polecat: %s
 Time: %s
 
 Please verify state and execute lifecycle action.
-`, role, action, rigName, polecatName, time.Now().Format(time.RFC3339))
+`, role, action, time.Now().Format(time.RFC3339))
 
 	// Send via bd mail (syntax: bd mail send <recipient> -s <subject> -m <body>)
 	cmd := exec.Command("bd", "mail", "send", manager,
 		"-s", subject,
 		"-m", body,
-		"--type", "task", // Mark as task requiring action
 	)
 	cmd.Dir = townRoot
 
@@ -352,45 +295,6 @@ Please verify state and execute lifecycle action.
 	}
 
 	return nil
-}
-
-// detectPolecatName detects the polecat name from environment or directory context.
-func detectPolecatName() string {
-	// Check environment variable first
-	if polecat := os.Getenv("GT_POLECAT"); polecat != "" {
-		return polecat
-	}
-
-	// Try to detect from tmux session name (format: gt-<rig>-<polecat>)
-	out, err := exec.Command("tmux", "display-message", "-p", "#{session_name}").Output()
-	if err == nil {
-		sessionName := strings.TrimSpace(string(out))
-		if strings.HasPrefix(sessionName, "gt-") {
-			parts := strings.SplitN(sessionName, "-", 3)
-			if len(parts) >= 3 {
-				return parts[2]
-			}
-		}
-	}
-
-	// Try to detect from working directory
-	cwd, err := os.Getwd()
-	if err != nil {
-		return ""
-	}
-
-	// Look for "polecats" in path: .../rig/polecats/polecat/...
-	if idx := strings.Index(cwd, "/polecats/"); idx != -1 {
-		// Extract polecat name from path after /polecats/
-		remainder := cwd[idx+len("/polecats/"):]
-		// Take first component
-		if slashIdx := strings.Index(remainder, "/"); slashIdx != -1 {
-			return remainder[:slashIdx]
-		}
-		return remainder
-	}
-
-	return ""
 }
 
 // setRequestingState updates state.json to indicate we're requesting lifecycle action.
