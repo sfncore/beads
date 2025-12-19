@@ -14,6 +14,7 @@ import (
 
 	"github.com/steveyegge/gastown/internal/mail"
 	"github.com/steveyegge/gastown/internal/rig"
+	"github.com/steveyegge/gastown/internal/tmux"
 )
 
 // Common errors
@@ -40,6 +41,11 @@ func NewManager(r *rig.Rig) *Manager {
 // stateFile returns the path to the refinery state file.
 func (m *Manager) stateFile() string {
 	return filepath.Join(m.rig.Path, ".gastown", "refinery.json")
+}
+
+// sessionName returns the tmux session name for this refinery.
+func (m *Manager) sessionName() string {
+	return fmt.Sprintf("gt-%s-refinery", m.rig.Name)
 }
 
 // loadState loads refinery state from disk.
@@ -85,13 +91,35 @@ func (m *Manager) Status() (*Refinery, error) {
 		return nil, err
 	}
 
-	// If running, verify process is still alive
-	if ref.State == StateRunning && ref.PID > 0 {
-		if !processExists(ref.PID) {
-			ref.State = StateStopped
-			ref.PID = 0
+	// Check if tmux session exists
+	t := tmux.NewTmux()
+	sessionID := m.sessionName()
+	sessionRunning, _ := t.HasSession(sessionID)
+
+	// If tmux session is running, refinery is running
+	if sessionRunning {
+		if ref.State != StateRunning {
+			// Update state to match reality
+			now := time.Now()
+			ref.State = StateRunning
+			if ref.StartedAt == nil {
+				ref.StartedAt = &now
+			}
 			m.saveState(ref)
 		}
+		return ref, nil
+	}
+
+	// If state says running but tmux session doesn't exist, check PID
+	if ref.State == StateRunning {
+		if ref.PID > 0 && processExists(ref.PID) {
+			// Process is still running (foreground mode without tmux)
+			return ref, nil
+		}
+		// Neither session nor process exists - mark as stopped
+		ref.State = StateStopped
+		ref.PID = 0
+		m.saveState(ref)
 	}
 
 	return ref, nil
@@ -99,33 +127,59 @@ func (m *Manager) Status() (*Refinery, error) {
 
 // Start starts the refinery.
 // If foreground is true, runs in the current process (blocking).
-// Otherwise, spawns a background process.
+// Otherwise, spawns a tmux session running the refinery in foreground mode.
 func (m *Manager) Start(foreground bool) error {
 	ref, err := m.loadState()
 	if err != nil {
 		return err
 	}
 
+	// Check if already running via tmux session
+	t := tmux.NewTmux()
+	sessionID := m.sessionName()
+	running, _ := t.HasSession(sessionID)
+	if running {
+		return ErrAlreadyRunning
+	}
+
+	// Also check via PID for backwards compatibility
 	if ref.State == StateRunning && ref.PID > 0 && processExists(ref.PID) {
 		return ErrAlreadyRunning
 	}
 
-	now := time.Now()
-	ref.State = StateRunning
-	ref.StartedAt = &now
-	ref.PID = os.Getpid() // For foreground mode; background would set actual PID
-
-	if err := m.saveState(ref); err != nil {
-		return err
-	}
-
 	if foreground {
+		// Running in foreground - update state and run
+		now := time.Now()
+		ref.State = StateRunning
+		ref.StartedAt = &now
+		ref.PID = os.Getpid()
+
+		if err := m.saveState(ref); err != nil {
+			return err
+		}
+
 		// Run the processing loop (blocking)
 		return m.run(ref)
 	}
 
-	// Background mode: spawn a new process
-	// For MVP, we just mark as running - actual daemon implementation in gt-ov2
+	// Background mode: spawn a tmux session running the refinery
+	if err := t.NewSession(sessionID, m.workDir); err != nil {
+		return fmt.Errorf("creating tmux session: %w", err)
+	}
+
+	// Set environment variables
+	t.SetEnvironment(sessionID, "GT_RIG", m.rig.Name)
+	t.SetEnvironment(sessionID, "GT_REFINERY", "1")
+
+	// Send the command to start refinery in foreground mode
+	// The foreground mode handles state updates and the processing loop
+	command := fmt.Sprintf("gt refinery start %s --foreground", m.rig.Name)
+	if err := t.SendKeys(sessionID, command); err != nil {
+		// Clean up the session on failure
+		t.KillSession(sessionID)
+		return fmt.Errorf("starting refinery: %w", err)
+	}
+
 	return nil
 }
 
@@ -136,12 +190,23 @@ func (m *Manager) Stop() error {
 		return err
 	}
 
-	if ref.State != StateRunning {
+	// Check if tmux session exists
+	t := tmux.NewTmux()
+	sessionID := m.sessionName()
+	sessionRunning, _ := t.HasSession(sessionID)
+
+	// If neither state nor session indicates running, it's not running
+	if ref.State != StateRunning && !sessionRunning {
 		return ErrNotRunning
 	}
 
-	// If we have a PID, try to stop it gracefully
-	if ref.PID > 0 && ref.PID != os.Getpid() {
+	// Kill tmux session if it exists
+	if sessionRunning {
+		t.KillSession(sessionID)
+	}
+
+	// If we have a PID and it's a different process, try to stop it gracefully
+	if ref.PID > 0 && ref.PID != os.Getpid() && processExists(ref.PID) {
 		// Send SIGTERM
 		if proc, err := os.FindProcess(ref.PID); err == nil {
 			proc.Signal(os.Interrupt)
