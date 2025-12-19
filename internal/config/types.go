@@ -43,3 +43,68 @@ const CurrentTownVersion = 1
 
 // CurrentRigsVersion is the current schema version for RigsConfig.
 const CurrentRigsVersion = 1
+
+// CurrentRigConfigVersion is the current schema version for RigConfig.
+const CurrentRigConfigVersion = 1
+
+// RigConfig represents the per-rig configuration (rig/config.json).
+type RigConfig struct {
+	Type       string            `json:"type"`                  // "rig"
+	Version    int               `json:"version"`               // schema version
+	MergeQueue *MergeQueueConfig `json:"merge_queue,omitempty"` // merge queue settings
+}
+
+// MergeQueueConfig represents merge queue settings for a rig.
+type MergeQueueConfig struct {
+	// Enabled controls whether the merge queue is active.
+	Enabled bool `json:"enabled"`
+
+	// TargetBranch is the default branch to merge into (usually "main").
+	TargetBranch string `json:"target_branch"`
+
+	// IntegrationBranches enables integration branch workflow for epics.
+	IntegrationBranches bool `json:"integration_branches"`
+
+	// OnConflict specifies conflict resolution strategy: "assign_back" or "auto_rebase".
+	OnConflict string `json:"on_conflict"`
+
+	// RunTests controls whether to run tests before merging.
+	RunTests bool `json:"run_tests"`
+
+	// TestCommand is the command to run for tests.
+	TestCommand string `json:"test_command,omitempty"`
+
+	// DeleteMergedBranches controls whether to delete branches after merging.
+	DeleteMergedBranches bool `json:"delete_merged_branches"`
+
+	// RetryFlakyTests is the number of times to retry flaky tests.
+	RetryFlakyTests int `json:"retry_flaky_tests"`
+
+	// PollInterval is how often to poll for new merge requests (e.g., "30s").
+	PollInterval string `json:"poll_interval"`
+
+	// MaxConcurrent is the maximum number of concurrent merges.
+	MaxConcurrent int `json:"max_concurrent"`
+}
+
+// OnConflict strategy constants.
+const (
+	OnConflictAssignBack = "assign_back"
+	OnConflictAutoRebase = "auto_rebase"
+)
+
+// DefaultMergeQueueConfig returns a MergeQueueConfig with sensible defaults.
+func DefaultMergeQueueConfig() *MergeQueueConfig {
+	return &MergeQueueConfig{
+		Enabled:              true,
+		TargetBranch:         "main",
+		IntegrationBranches:  true,
+		OnConflict:           OnConflictAssignBack,
+		RunTests:             true,
+		TestCommand:          "go test ./...",
+		DeleteMergedBranches: true,
+		RetryFlakyTests:      1,
+		PollInterval:         "30s",
+		MaxConcurrent:        1,
+	}
+}

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 var (
@@ -185,4 +186,105 @@ func validateAgentState(s *AgentState) error {
 		return fmt.Errorf("%w: role", ErrMissingField)
 	}
 	return nil
+}
+
+// LoadRigConfig loads and validates a rig configuration file.
+func LoadRigConfig(path string) (*RigConfig, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, fmt.Errorf("%w: %s", ErrNotFound, path)
+		}
+		return nil, fmt.Errorf("reading config: %w", err)
+	}
+
+	var config RigConfig
+	if err := json.Unmarshal(data, &config); err != nil {
+		return nil, fmt.Errorf("parsing config: %w", err)
+	}
+
+	if err := validateRigConfig(&config); err != nil {
+		return nil, err
+	}
+
+	return &config, nil
+}
+
+// SaveRigConfig saves a rig configuration to a file.
+func SaveRigConfig(path string, config *RigConfig) error {
+	if err := validateRigConfig(config); err != nil {
+		return err
+	}
+
+	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+		return fmt.Errorf("creating directory: %w", err)
+	}
+
+	data, err := json.MarshalIndent(config, "", "  ")
+	if err != nil {
+		return fmt.Errorf("encoding config: %w", err)
+	}
+
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf("writing config: %w", err)
+	}
+
+	return nil
+}
+
+// validateRigConfig validates a RigConfig.
+func validateRigConfig(c *RigConfig) error {
+	if c.Type != "rig" && c.Type != "" {
+		return fmt.Errorf("%w: expected type 'rig', got '%s'", ErrInvalidType, c.Type)
+	}
+	if c.Version > CurrentRigConfigVersion {
+		return fmt.Errorf("%w: got %d, max supported %d", ErrInvalidVersion, c.Version, CurrentRigConfigVersion)
+	}
+
+	// Validate merge queue config if present
+	if c.MergeQueue != nil {
+		if err := validateMergeQueueConfig(c.MergeQueue); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ErrInvalidOnConflict indicates an invalid on_conflict strategy.
+var ErrInvalidOnConflict = errors.New("invalid on_conflict strategy")
+
+// validateMergeQueueConfig validates a MergeQueueConfig.
+func validateMergeQueueConfig(c *MergeQueueConfig) error {
+	// Validate on_conflict strategy
+	if c.OnConflict != "" && c.OnConflict != OnConflictAssignBack && c.OnConflict != OnConflictAutoRebase {
+		return fmt.Errorf("%w: got '%s', want '%s' or '%s'",
+			ErrInvalidOnConflict, c.OnConflict, OnConflictAssignBack, OnConflictAutoRebase)
+	}
+
+	// Validate poll_interval if specified
+	if c.PollInterval != "" {
+		if _, err := time.ParseDuration(c.PollInterval); err != nil {
+			return fmt.Errorf("invalid poll_interval: %w", err)
+		}
+	}
+
+	// Validate non-negative values
+	if c.RetryFlakyTests < 0 {
+		return fmt.Errorf("%w: retry_flaky_tests must be non-negative", ErrMissingField)
+	}
+	if c.MaxConcurrent < 0 {
+		return fmt.Errorf("%w: max_concurrent must be non-negative", ErrMissingField)
+	}
+
+	return nil
+}
+
+// NewRigConfig creates a new RigConfig with defaults.
+func NewRigConfig() *RigConfig {
+	return &RigConfig{
+		Type:       "rig",
+		Version:    CurrentRigConfigVersion,
+		MergeQueue: DefaultMergeQueueConfig(),
+	}
 }
