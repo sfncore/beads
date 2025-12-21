@@ -10,8 +10,9 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "gt",
-	Short: "Gas Town - Multi-agent workspace manager",
+	Use:     "gt",
+	Short:   "Gas Town - Multi-agent workspace manager",
+	Version: Version,
 	Long: `Gas Town (gt) manages multi-agent workspaces called rigs.
 
 It coordinates agent spawning, work distribution, and communication
