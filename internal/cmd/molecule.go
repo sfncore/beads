@@ -15,6 +15,9 @@ var (
 	moleculeInstContext []string
 	moleculeCatalogOnly bool // List only catalog templates
 	moleculeDBOnly      bool // List only database molecules
+	moleculeBondParent  string
+	moleculeBondRef     string
+	moleculeBondVars    []string
 )
 
 var moleculeCmd = &cobra.Command{
@@ -317,6 +320,34 @@ a permanent (but compact) record.`,
 	RunE: runMoleculeSquash,
 }
 
+var moleculeBondCmd = &cobra.Command{
+	Use:   "bond <proto-id>",
+	Short: "Dynamically bond a child molecule to a running parent",
+	Long: `Bond a child molecule to a running parent molecule/wisp.
+
+This creates a new child molecule instance under the specified parent,
+enabling the Christmas Ornament pattern where a step can dynamically
+spawn children for parallel execution.
+
+Examples:
+  # Bond a polecat inspection arm to current patrol wisp
+  gt mol bond mol-polecat-arm --parent=patrol-x7k --ref=arm-toast \
+    --var polecat_name=toast --var rig=gastown
+
+  # The child will have ID: patrol-x7k.arm-toast
+  # And template variables {{polecat_name}} and {{rig}} expanded
+
+Usage in mol-witness-patrol's survey-workers step:
+  for polecat in $(gt polecat list <rig> --names); do
+    gt mol bond mol-polecat-arm --parent=$PATROL_WISP_ID \
+      --ref=arm-$polecat \
+      --var polecat_name=$polecat \
+      --var rig=<rig>
+  done`,
+	Args: cobra.ExactArgs(1),
+	RunE: runMoleculeBond,
+}
+
 func init() {
 	// List flags
 	moleculeListCmd.Flags().BoolVar(&moleculeJSON, "json", false, "Output as JSON")
@@ -358,6 +389,13 @@ func init() {
 	// Squash flags
 	moleculeSquashCmd.Flags().BoolVar(&moleculeJSON, "json", false, "Output as JSON")
 
+	// Bond flags
+	moleculeBondCmd.Flags().StringVar(&moleculeBondParent, "parent", "", "Parent molecule/wisp ID (required)")
+	moleculeBondCmd.Flags().StringVar(&moleculeBondRef, "ref", "", "Child reference suffix (e.g., arm-toast)")
+	moleculeBondCmd.Flags().StringArrayVar(&moleculeBondVars, "var", nil, "Template variable (key=value)")
+	moleculeBondCmd.Flags().BoolVar(&moleculeJSON, "json", false, "Output as JSON")
+	moleculeBondCmd.MarkFlagRequired("parent")
+
 	// Add subcommands
 	moleculeCmd.AddCommand(moleculeStatusCmd)
 	moleculeCmd.AddCommand(moleculeCurrentCmd)
@@ -375,6 +413,7 @@ func init() {
 	moleculeCmd.AddCommand(moleculeDetachCmd)
 	moleculeCmd.AddCommand(moleculeAttachmentCmd)
 	moleculeCmd.AddCommand(moleculeAttachFromMailCmd)
+	moleculeCmd.AddCommand(moleculeBondCmd)
 
 	rootCmd.AddCommand(moleculeCmd)
 }

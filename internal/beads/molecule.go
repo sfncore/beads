@@ -13,6 +13,7 @@ type MoleculeStep struct {
 	Title        string   // Step title (first non-empty line or ref)
 	Instructions string   // Prose instructions for this step
 	Needs        []string // Step refs this step depends on
+	WaitsFor     []string // Dynamic wait conditions (e.g., "all-children")
 	Tier         string   // Optional tier hint: haiku, sonnet, opus
 }
 
@@ -24,6 +25,10 @@ var needsLineRegex = regexp.MustCompile(`(?i)^Needs:\s*(.+)$`)
 
 // tierLineRegex matches "Tier: haiku|sonnet|opus" lines.
 var tierLineRegex = regexp.MustCompile(`(?i)^Tier:\s*(haiku|sonnet|opus)\s*$`)
+
+// waitsForLineRegex matches "WaitsFor: condition1, condition2, ..." lines.
+// Common conditions: "all-children" (fanout gate for dynamically bonded children)
+var waitsForLineRegex = regexp.MustCompile(`(?i)^WaitsFor:\s*(.+)$`)
 
 // templateVarRegex matches {{variable}} placeholders.
 var templateVarRegex = regexp.MustCompile(`\{\{(\w+)\}\}`)
@@ -74,6 +79,18 @@ func ParseMoleculeSteps(description string) ([]MoleculeStep, error) {
 			// Check for Tier: line
 			if matches := tierLineRegex.FindStringSubmatch(trimmed); matches != nil {
 				currentStep.Tier = strings.ToLower(matches[1])
+				continue
+			}
+
+			// Check for WaitsFor: line
+			if matches := waitsForLineRegex.FindStringSubmatch(trimmed); matches != nil {
+				conditions := strings.Split(matches[1], ",")
+				for _, cond := range conditions {
+					cond = strings.TrimSpace(cond)
+					if cond != "" {
+						currentStep.WaitsFor = append(currentStep.WaitsFor, cond)
+					}
+				}
 				continue
 			}
 

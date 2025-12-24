@@ -143,16 +143,56 @@ Tier: opus`
 	}
 }
 
+func TestParseMoleculeSteps_WithWaitsFor(t *testing.T) {
+	desc := `## Step: survey
+Discover work items.
+
+## Step: aggregate
+Collect results from dynamically bonded children.
+WaitsFor: all-children
+Needs: survey
+
+## Step: finish
+Wrap up.
+WaitsFor: all-children, external-signal
+Needs: aggregate`
+
+	steps, err := ParseMoleculeSteps(desc)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(steps) != 3 {
+		t.Fatalf("expected 3 steps, got %d", len(steps))
+	}
+
+	// survey has no WaitsFor
+	if len(steps[0].WaitsFor) != 0 {
+		t.Errorf("step[0].WaitsFor = %v, want empty", steps[0].WaitsFor)
+	}
+
+	// aggregate waits for all-children
+	if !reflect.DeepEqual(steps[1].WaitsFor, []string{"all-children"}) {
+		t.Errorf("step[1].WaitsFor = %v, want [all-children]", steps[1].WaitsFor)
+	}
+
+	// finish waits for multiple conditions
+	if !reflect.DeepEqual(steps[2].WaitsFor, []string{"all-children", "external-signal"}) {
+		t.Errorf("step[2].WaitsFor = %v, want [all-children, external-signal]", steps[2].WaitsFor)
+	}
+}
+
 func TestParseMoleculeSteps_CaseInsensitive(t *testing.T) {
 	desc := `## STEP: Design
 Plan the work.
 NEEDS: nothing
 TIER: SONNET
+WAITSFOR: All-Children
 
 ## step: implement
 Write code.
 needs: Design
-tier: Haiku`
+tier: Haiku
+waitsfor: some-condition`
 
 	steps, err := ParseMoleculeSteps(desc)
 	if err != nil {
@@ -169,12 +209,19 @@ tier: Haiku`
 	if steps[0].Tier != "sonnet" {
 		t.Errorf("step[0].Tier = %q, want sonnet", steps[0].Tier)
 	}
+	// WaitsFor values preserve case
+	if !reflect.DeepEqual(steps[0].WaitsFor, []string{"All-Children"}) {
+		t.Errorf("step[0].WaitsFor = %v, want [All-Children]", steps[0].WaitsFor)
+	}
 
 	if steps[1].Ref != "implement" {
 		t.Errorf("step[1].Ref = %q, want implement", steps[1].Ref)
 	}
 	if steps[1].Tier != "haiku" {
 		t.Errorf("step[1].Tier = %q, want haiku", steps[1].Tier)
+	}
+	if !reflect.DeepEqual(steps[1].WaitsFor, []string{"some-condition"}) {
+		t.Errorf("step[1].WaitsFor = %v, want [some-condition]", steps[1].WaitsFor)
 	}
 }
 

@@ -343,6 +343,11 @@ func TestWitnessPatrolMolecule(t *testing.T) {
 		t.Errorf("aggregate should need survey-workers, got %v", steps[4].Needs)
 	}
 
+	// aggregate should have WaitsFor: all-children
+	if len(steps[4].WaitsFor) != 1 || steps[4].WaitsFor[0] != "all-children" {
+		t.Errorf("aggregate should WaitsFor all-children, got %v", steps[4].WaitsFor)
+	}
+
 	// burn-or-loop needs context-check
 	if len(steps[8].Needs) != 1 || steps[8].Needs[0] != "context-check" {
 		t.Errorf("burn-or-loop should need context-check, got %v", steps[8].Needs)

@@ -83,6 +83,132 @@ func runMoleculeInstantiate(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
+// runMoleculeBond dynamically bonds a child molecule to a running parent.
+// This enables the Christmas Ornament pattern for parallel child execution.
+func runMoleculeBond(cmd *cobra.Command, args []string) error {
+	protoID := args[0]
+
+	workDir, err := findLocalBeadsDir()
+	if err != nil {
+		return fmt.Errorf("not in a beads workspace: %w", err)
+	}
+
+	b := beads.New(workDir)
+
+	// Load the molecule proto from catalog
+	catalog, err := loadMoleculeCatalog(workDir)
+	if err != nil {
+		return fmt.Errorf("loading catalog: %w", err)
+	}
+
+	var proto *beads.Issue
+
+	if catalogMol := catalog.Get(protoID); catalogMol != nil {
+		proto = catalogMol.ToIssue()
+	} else {
+		// Fall back to database
+		proto, err = b.Show(protoID)
+		if err != nil {
+			return fmt.Errorf("getting molecule proto: %w", err)
+		}
+	}
+
+	if proto.Type != "molecule" {
+		return fmt.Errorf("%s is not a molecule (type: %s)", protoID, proto.Type)
+	}
+
+	// Validate molecule
+	if err := beads.ValidateMolecule(proto); err != nil {
+		return fmt.Errorf("invalid molecule: %w", err)
+	}
+
+	// Get the parent issue (the running molecule/wisp)
+	parent, err := b.Show(moleculeBondParent)
+	if err != nil {
+		return fmt.Errorf("getting parent: %w", err)
+	}
+
+	// Parse template variables from --var flags
+	ctx := make(map[string]string)
+	for _, kv := range moleculeBondVars {
+		parts := strings.SplitN(kv, "=", 2)
+		if len(parts) != 2 {
+			return fmt.Errorf("invalid var format %q (expected key=value)", kv)
+		}
+		ctx[parts[0]] = parts[1]
+	}
+
+	// Create the bonded child as an issue under the parent
+	// First, create a container issue for the bonded molecule
+	childTitle := proto.Title
+	if moleculeBondRef != "" {
+		childTitle = fmt.Sprintf("%s (%s)", proto.Title, moleculeBondRef)
+	}
+
+	// Expand template variables in the proto description
+	expandedDesc := beads.ExpandTemplateVars(proto.Description, ctx)
+
+	// Add bonding metadata
+	bondingMeta := fmt.Sprintf(`
+---
+bonded_from: %s
+bonded_to: %s
+bonded_ref: %s
+bonded_at: %s
+`, protoID, moleculeBondParent, moleculeBondRef, time.Now().UTC().Format(time.RFC3339))
+
+	childDesc := expandedDesc + bondingMeta
+
+	// Create the child molecule container
+	childOpts := beads.CreateOptions{
+		Title:       childTitle,
+		Description: childDesc,
+		Type:        "task", // Bonded children are tasks, not molecules
+		Priority:    parent.Priority,
+		Parent:      moleculeBondParent,
+	}
+
+	child, err := b.Create(childOpts)
+	if err != nil {
+		return fmt.Errorf("creating bonded child: %w", err)
+	}
+
+	// Now instantiate the proto's steps under this child
+	opts := beads.InstantiateOptions{Context: ctx}
+	steps, err := b.InstantiateMolecule(proto, child, opts)
+	if err != nil {
+		// Clean up the child container on failure
+		_ = b.Close(child.ID)
+		return fmt.Errorf("instantiating bonded molecule: %w", err)
+	}
+
+	if moleculeJSON {
+		result := map[string]interface{}{
+			"proto":     protoID,
+			"parent":    moleculeBondParent,
+			"ref":       moleculeBondRef,
+			"child_id":  child.ID,
+			"steps":     len(steps),
+			"variables": ctx,
+		}
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(result)
+	}
+
+	fmt.Printf("%s Bonded %s to %s\n",
+		style.Bold.Render("🔗"), protoID, moleculeBondParent)
+	fmt.Printf("  Child: %s (%d steps)\n", child.ID, len(steps))
+	if moleculeBondRef != "" {
+		fmt.Printf("  Ref: %s\n", moleculeBondRef)
+	}
+	if len(ctx) > 0 {
+		fmt.Printf("  Variables: %v\n", ctx)
+	}
+
+	return nil
+}
+
 // runMoleculeCatalog lists available molecule protos.
 func runMoleculeCatalog(cmd *cobra.Command, args []string) error {
 	workDir, err := findLocalBeadsDir()
