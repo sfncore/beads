@@ -7,7 +7,12 @@ import (
 )
 
 // StatusPinned is the status for pinned beads that never get closed.
+// These are "domain table" beads like role definitions that persist permanently.
 const StatusPinned = "pinned"
+
+// StatusHooked is the status for beads on an agent's hook (work assignment).
+// This is distinct from pinned - hooked beads are active work, not permanent records.
+const StatusHooked = "hooked"
 
 // HandoffBeadTitle returns the well-known title for a role's handoff bead.
 func HandoffBeadTitle(role string) string {

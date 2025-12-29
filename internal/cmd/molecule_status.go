@@ -367,37 +367,37 @@ func runMoleculeStatus(cmd *cobra.Command, args []string) error {
 			}
 		}
 	} else {
-		// FALLBACK: Legacy pinned-query approach (for agents without agent beads)
-		pinnedBeads, err := b.List(beads.ListOptions{
-			Status:   beads.StatusPinned,
+		// FALLBACK: Query for hooked beads (work on agent's hook)
+		hookedBeads, err := b.List(beads.ListOptions{
+			Status:   beads.StatusHooked,
 			Assignee: target,
 			Priority: -1,
 		})
 		if err != nil {
-			return fmt.Errorf("listing pinned beads: %w", err)
+			return fmt.Errorf("listing hooked beads: %w", err)
 		}
 
 		// For town-level roles (mayor, deacon), scan all rigs if nothing found locally
-		if len(pinnedBeads) == 0 && isTownLevelRole(target) {
-			pinnedBeads = scanAllRigsForPinnedBeads(townRoot, target)
+		if len(hookedBeads) == 0 && isTownLevelRole(target) {
+			hookedBeads = scanAllRigsForHookedBeads(townRoot, target)
 		}
 
-		status.HasWork = len(pinnedBeads) > 0
+		status.HasWork = len(hookedBeads) > 0
 
-		if len(pinnedBeads) > 0 {
-			// Take the first pinned bead
-			status.PinnedBead = pinnedBeads[0]
+		if len(hookedBeads) > 0 {
+			// Take the first hooked bead
+			status.PinnedBead = hookedBeads[0]
 
 			// Check for attached molecule
-			attachment := beads.ParseAttachmentFields(pinnedBeads[0])
+			attachment := beads.ParseAttachmentFields(hookedBeads[0])
 			if attachment != nil {
 				status.AttachedMolecule = attachment.AttachedMolecule
 				status.AttachedAt = attachment.AttachedAt
 				status.AttachedArgs = attachment.AttachedArgs
 
 				// Check if it's a wisp
-				status.IsWisp = strings.Contains(pinnedBeads[0].Description, "wisp: true") ||
-					strings.Contains(pinnedBeads[0].Description, "is_wisp: true")
+				status.IsWisp = strings.Contains(hookedBeads[0].Description, "wisp: true") ||
+					strings.Contains(hookedBeads[0].Description, "is_wisp: true")
 
 				// Get progress if there's an attached molecule
 				if attachment.AttachedMolecule != "" {
@@ -846,10 +846,10 @@ func isTownLevelRole(agentID string) bool {
 	return agentID == "mayor" || agentID == "deacon"
 }
 
-// scanAllRigsForPinnedBeads scans all registered rigs for pinned beads
+// scanAllRigsForHookedBeads scans all registered rigs for hooked beads
 // assigned to the target agent. Used for town-level roles that may have
-// work pinned in any rig.
-func scanAllRigsForPinnedBeads(townRoot, target string) []*beads.Issue {
+// work hooked in any rig.
+func scanAllRigsForHookedBeads(townRoot, target string) []*beads.Issue {
 	// Load routes from town beads
 	townBeadsDir := filepath.Join(townRoot, ".beads")
 	routes, err := beads.LoadRoutes(townBeadsDir)
@@ -865,8 +865,8 @@ func scanAllRigsForPinnedBeads(townRoot, target string) []*beads.Issue {
 		}
 
 		b := beads.New(rigBeadsDir)
-		pinnedBeads, err := b.List(beads.ListOptions{
-			Status:   beads.StatusPinned,
+		hookedBeads, err := b.List(beads.ListOptions{
+			Status:   beads.StatusHooked,
 			Assignee: target,
 			Priority: -1,
 		})
@@ -874,8 +874,8 @@ func scanAllRigsForPinnedBeads(townRoot, target string) []*beads.Issue {
 			continue
 		}
 
-		if len(pinnedBeads) > 0 {
-			return pinnedBeads
+		if len(hookedBeads) > 0 {
+			return hookedBeads
 		}
 	}
 
