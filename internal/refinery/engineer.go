@@ -11,9 +11,7 @@ import (
 	"time"
 
 	"github.com/steveyegge/gastown/internal/beads"
-	"github.com/steveyegge/gastown/internal/events"
 	"github.com/steveyegge/gastown/internal/git"
-	"github.com/steveyegge/gastown/internal/mrqueue"
 	"github.com/steveyegge/gastown/internal/rig"
 )
 
@@ -71,14 +69,10 @@ func DefaultMergeQueueConfig() *MergeQueueConfig {
 type Engineer struct {
 	rig     *rig.Rig
 	beads   *beads.Beads
-	mrQueue *mrqueue.Queue
 	git     *git.Git
 	config  *MergeQueueConfig
 	workDir string
 	output  io.Writer // Output destination for user-facing messages
-
-	// stopCh is used for graceful shutdown
-	stopCh chan struct{}
 }
 
 // NewEngineer creates a new Engineer for the given rig.
@@ -86,12 +80,10 @@ func NewEngineer(r *rig.Rig) *Engineer {
 	return &Engineer{
 		rig:     r,
 		beads:   beads.New(r.Path),
-		mrQueue: mrqueue.New(r.Path),
 		git:     git.NewGit(r.Path),
 		config:  DefaultMergeQueueConfig(),
 		workDir: r.Path,
 		output:  os.Stdout,
-		stopCh:  make(chan struct{}),
 	}
 }
 
@@ -187,90 +179,6 @@ func (e *Engineer) LoadConfig() error {
 // Config returns the current merge queue configuration.
 func (e *Engineer) Config() *MergeQueueConfig {
 	return e.config
-}
-
-// Run starts the Engineer main loop. It blocks until the context is cancelled
-// or Stop() is called. Returns nil on graceful shutdown.
-func (e *Engineer) Run(ctx context.Context) error {
-	if err := e.LoadConfig(); err != nil {
-		return fmt.Errorf("loading config: %w", err)
-	}
-
-	if !e.config.Enabled {
-		return fmt.Errorf("merge queue is disabled in configuration")
-	}
-
-	fmt.Fprintf(e.output, "[Engineer] Starting for rig %s (poll_interval=%s)\n",
-		e.rig.Name, e.config.PollInterval)
-
-	ticker := time.NewTicker(e.config.PollInterval)
-	defer ticker.Stop()
-
-	// Run one iteration immediately, then on ticker
-	if err := e.processOnce(ctx); err != nil {
-		fmt.Fprintf(e.output, "[Engineer] Error: %v\n", err)
-	}
-
-	for {
-		select {
-		case <-ctx.Done():
-			fmt.Fprintln(e.output, "[Engineer] Shutting down (context cancelled)")
-			return nil
-		case <-e.stopCh:
-			fmt.Fprintln(e.output, "[Engineer] Shutting down (stop signal)")
-			return nil
-		case <-ticker.C:
-			if err := e.processOnce(ctx); err != nil {
-				fmt.Fprintf(e.output, "[Engineer] Error: %v\n", err)
-			}
-		}
-	}
-}
-
-// Stop signals the Engineer to stop processing. This is a non-blocking call.
-func (e *Engineer) Stop() {
-	close(e.stopCh)
-}
-
-// processOnce performs one iteration of the Engineer loop:
-// 1. Query for ready merge-requests from wisp storage
-// 2. If none, return (will try again on next tick)
-// 3. Process the highest priority, oldest MR
-func (e *Engineer) processOnce(ctx context.Context) error {
-	// Check context before starting
-	select {
-	case <-ctx.Done():
-		return nil
-	default:
-	}
-
-	// 1. Query MR queue (wisp storage - already sorted by priority/age)
-	pendingMRs, err := e.mrQueue.List()
-	if err != nil {
-		return fmt.Errorf("querying merge queue: %w", err)
-	}
-
-	// 2. If empty, return
-	if len(pendingMRs) == 0 {
-		return nil
-	}
-
-	// 3. Select highest priority, oldest MR (List already returns sorted)
-	mr := pendingMRs[0]
-
-	fmt.Fprintf(e.output, "[Engineer] Processing: %s (%s)\n", mr.ID, mr.Title)
-
-	// 4. Process MR
-	result := e.ProcessMRFromQueue(ctx, mr)
-
-	// 5. Handle result
-	if result.Success {
-		e.handleSuccessFromQueue(mr, result)
-	} else {
-		e.handleFailureFromQueue(mr, result)
-	}
-
-	return nil
 }
 
 // ProcessResult contains the result of processing a merge request.
@@ -371,73 +279,4 @@ func (e *Engineer) handleFailure(mr *beads.Issue, result ProcessResult) {
 	fmt.Fprintf(e.output, "[Engineer] ✗ Failed: %s - %s\n", mr.ID, result.Error)
 
 	// Full failure handling (assign back to worker, labels) in gt-3x1.4
-}
-
-// ProcessMRFromQueue processes a merge request from wisp queue.
-func (e *Engineer) ProcessMRFromQueue(ctx context.Context, mr *mrqueue.MR) ProcessResult {
-	// Emit merge_started event
-	actor := fmt.Sprintf("%s/refinery", e.rig.Name)
-	_ = events.LogFeed(events.TypeMergeStarted, actor, events.MergePayload(mr.ID, mr.Worker, mr.Branch, ""))
-
-	// MR fields are directly on the struct (no parsing needed)
-	fmt.Fprintln(e.output, "[Engineer] Processing MR from queue:")
-	fmt.Fprintf(e.output, "  Branch: %s\n", mr.Branch)
-	fmt.Fprintf(e.output, "  Target: %s\n", mr.Target)
-	fmt.Fprintf(e.output, "  Worker: %s\n", mr.Worker)
-	fmt.Fprintf(e.output, "  Source: %s\n", mr.SourceIssue)
-
-	// TODO: Actual merge implementation
-	// For now, return failure - actual implementation in gt-3x1.2
-	return ProcessResult{
-		Success: false,
-		Error:   "ProcessMRFromQueue not fully implemented (see gt-3x1.2)",
-	}
-}
-
-// handleSuccessFromQueue handles a successful merge from wisp queue.
-func (e *Engineer) handleSuccessFromQueue(mr *mrqueue.MR, result ProcessResult) {
-	actor := fmt.Sprintf("%s/refinery", e.rig.Name)
-
-	// Emit merged event
-	_ = events.LogFeed(events.TypeMerged, actor, events.MergePayload(mr.ID, mr.Worker, mr.Branch, ""))
-
-	// 1. Close source issue with reference to MR
-	if mr.SourceIssue != "" {
-		closeReason := fmt.Sprintf("Merged in %s", mr.ID)
-		if err := e.beads.CloseWithReason(closeReason, mr.SourceIssue); err != nil {
-			fmt.Fprintf(e.output, "[Engineer] Warning: failed to close source issue %s: %v\n", mr.SourceIssue, err)
-		} else {
-			fmt.Fprintf(e.output, "[Engineer] Closed source issue: %s\n", mr.SourceIssue)
-		}
-	}
-
-	// 2. Delete source branch if configured (local only)
-	if e.config.DeleteMergedBranches && mr.Branch != "" {
-		if err := e.git.DeleteBranch(mr.Branch, true); err != nil {
-			fmt.Fprintf(e.output, "[Engineer] Warning: failed to delete branch %s: %v\n", mr.Branch, err)
-		} else {
-			fmt.Fprintf(e.output, "[Engineer] Deleted local branch: %s\n", mr.Branch)
-		}
-	}
-
-	// 3. Remove MR from queue (ephemeral - just delete the file)
-	if err := e.mrQueue.Remove(mr.ID); err != nil {
-		fmt.Fprintf(e.output, "[Engineer] Warning: failed to remove MR from queue: %v\n", err)
-	}
-
-	// 4. Log success
-	fmt.Fprintf(e.output, "[Engineer] ✓ Merged: %s (commit: %s)\n", mr.ID, result.MergeCommit)
-}
-
-// handleFailureFromQueue handles a failed merge from wisp queue.
-func (e *Engineer) handleFailureFromQueue(mr *mrqueue.MR, result ProcessResult) {
-	actor := fmt.Sprintf("%s/refinery", e.rig.Name)
-
-	// Emit merge_failed event
-	_ = events.LogFeed(events.TypeMergeFailed, actor, events.MergePayload(mr.ID, mr.Worker, mr.Branch, result.Error))
-
-	// MR stays in queue for retry - no action needed on the file
-	// Log the failure
-	fmt.Fprintf(e.output, "[Engineer] ✗ Failed: %s - %s\n", mr.ID, result.Error)
-	fmt.Fprintln(e.output, "[Engineer] MR remains in queue for retry")
 }

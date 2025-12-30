@@ -206,9 +206,6 @@ func TestNewEngineer(t *testing.T) {
 	if e.config == nil {
 		t.Error("expected config to be initialized with defaults")
 	}
-	if e.stopCh == nil {
-		t.Error("expected stopCh to be initialized")
-	}
 }
 
 func TestEngineer_DeleteMergedBranchesConfig(t *testing.T) {

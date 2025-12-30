@@ -10,7 +10,6 @@ import (
 	"github.com/steveyegge/gastown/internal/events"
 	"github.com/steveyegge/gastown/internal/git"
 	"github.com/steveyegge/gastown/internal/mail"
-	"github.com/steveyegge/gastown/internal/mrqueue"
 	"github.com/steveyegge/gastown/internal/style"
 	"github.com/steveyegge/gastown/internal/workspace"
 )
@@ -163,28 +162,6 @@ func runDone(cmd *cobra.Command, args []string) error {
 			return fmt.Errorf("creating merge request bead: %w", err)
 		}
 		mrID = mrIssue.ID
-
-		// Also submit to mrqueue so refinery can process it
-		// The mrqueue is the work queue the refinery polls; beads are the audit record
-		mq, err := mrqueue.NewFromWorkdir(cwd)
-		if err != nil {
-			// Non-fatal: bead was created, just warn about queue
-			style.PrintWarning("could not access merge queue: %v", err)
-		} else {
-			mqEntry := &mrqueue.MR{
-				ID:          mrID,
-				Branch:      branch,
-				Target:      target,
-				SourceIssue: issueID,
-				Worker:      worker,
-				Rig:         rigName,
-				Title:       title,
-				Priority:    priority,
-			}
-			if err := mq.Submit(mqEntry); err != nil {
-				style.PrintWarning("could not submit to merge queue: %v", err)
-			}
-		}
 
 		// Success output
 		fmt.Printf("%s Work submitted to merge queue\n", style.Bold.Render("✓"))
