@@ -183,8 +183,13 @@ func runSling(cmd *cobra.Command, args []string) error {
 	if len(args) > 1 {
 		target := args[1]
 
-		// Check if target is a dog target (deacon/dogs or deacon/dogs/<name>)
-		if dogName, isDog := IsDogTarget(target); isDog {
+		// Resolve "." to current agent identity (like git's "." meaning current directory)
+		if target == "." {
+			targetAgent, targetPane, _, err = resolveSelfTarget()
+			if err != nil {
+				return fmt.Errorf("resolving self for '.' target: %w", err)
+			}
+		} else if dogName, isDog := IsDogTarget(target); isDog {
 			if slingDryRun {
 				if dogName == "" {
 					fmt.Printf("Would dispatch to idle dog in kennel\n")
@@ -622,8 +627,13 @@ func runSlingFormula(args []string) error {
 	var err error
 
 	if target != "" {
-		// Check if target is a dog target (deacon/dogs or deacon/dogs/<name>)
-		if dogName, isDog := IsDogTarget(target); isDog {
+		// Resolve "." to current agent identity (like git's "." meaning current directory)
+		if target == "." {
+			targetAgent, targetPane, _, err = resolveSelfTarget()
+			if err != nil {
+				return fmt.Errorf("resolving self for '.' target: %w", err)
+			}
+		} else if dogName, isDog := IsDogTarget(target); isDog {
 			if slingDryRun {
 				if dogName == "" {
 					fmt.Printf("Would dispatch to idle dog in kennel\n")
