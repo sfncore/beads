@@ -193,7 +193,7 @@ func startDeaconSession(t *tmux.Tmux) error {
 	// Restarts are handled by daemon via ensureDeaconRunning on each heartbeat
 	// The startup hook handles context loading automatically
 	// Export GT_ROLE and BD_ACTOR in the command since tmux SetEnvironment only affects new panes
-	if err := t.SendKeys(DeaconSessionName, "export GT_ROLE=deacon BD_ACTOR=deacon && claude --dangerously-skip-permissions"); err != nil {
+	if err := t.SendKeys(DeaconSessionName, "export GT_ROLE=deacon BD_ACTOR=deacon GIT_AUTHOR_NAME=deacon && claude --dangerously-skip-permissions"); err != nil {
 		return fmt.Errorf("sending command: %w", err)
 	}
 

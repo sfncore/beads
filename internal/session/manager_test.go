@@ -163,7 +163,7 @@ func TestPolecatCommandFormat(t *testing.T) {
 	expectedBdActor := "gastown/polecats/Toast"
 
 	// Build the expected command format (mirrors Start() logic)
-	expectedPrefix := "export GT_ROLE=polecat GT_RIG=" + rigName + " GT_POLECAT=" + polecatName + " BD_ACTOR=" + expectedBdActor
+	expectedPrefix := "export GT_ROLE=polecat GT_RIG=" + rigName + " GT_POLECAT=" + polecatName + " BD_ACTOR=" + expectedBdActor + " GIT_AUTHOR_NAME=" + expectedBdActor
 	expectedSuffix := "&& claude --dangerously-skip-permissions"
 
 	// The command must contain all required env exports
@@ -173,6 +173,7 @@ func TestPolecatCommandFormat(t *testing.T) {
 		"GT_RIG=" + rigName,
 		"GT_POLECAT=" + polecatName,
 		"BD_ACTOR=" + expectedBdActor,
+		"GIT_AUTHOR_NAME=" + expectedBdActor,
 		"claude --dangerously-skip-permissions",
 	}
 

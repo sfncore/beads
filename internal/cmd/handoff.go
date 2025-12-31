@@ -326,7 +326,7 @@ func buildRestartCommand(sessionName string) (string, error) {
 	// The SessionStart hook will run gt prime.
 	// Use exec to ensure clean process replacement.
 	if gtRole != "" {
-		return fmt.Sprintf("cd %s && export GT_ROLE=%s BD_ACTOR=%s && exec claude --dangerously-skip-permissions", workDir, gtRole, gtRole), nil
+		return fmt.Sprintf("cd %s && export GT_ROLE=%s BD_ACTOR=%s GIT_AUTHOR_NAME=%s && exec claude --dangerously-skip-permissions", workDir, gtRole, gtRole, gtRole), nil
 	}
 	return fmt.Sprintf("cd %s && exec claude --dangerously-skip-permissions", workDir), nil
 }

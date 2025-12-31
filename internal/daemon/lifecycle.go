@@ -428,8 +428,8 @@ func (d *Daemon) getStartCommand(config *beads.RoleConfig, parsed *ParsedIdentit
 	// Polecats need environment variables set in the command
 	if parsed.RoleType == "polecat" {
 		bdActor := fmt.Sprintf("%s/polecats/%s", parsed.RigName, parsed.AgentName)
-		return fmt.Sprintf("export GT_ROLE=polecat GT_RIG=%s GT_POLECAT=%s BD_ACTOR=%s && %s",
-			parsed.RigName, parsed.AgentName, bdActor, defaultCmd)
+		return fmt.Sprintf("export GT_ROLE=polecat GT_RIG=%s GT_POLECAT=%s BD_ACTOR=%s GIT_AUTHOR_NAME=%s && %s",
+			parsed.RigName, parsed.AgentName, bdActor, bdActor, defaultCmd)
 	}
 
 	return defaultCmd

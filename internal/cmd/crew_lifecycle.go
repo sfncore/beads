@@ -316,7 +316,7 @@ func runCrewRestart(cmd *cobra.Command, args []string) error {
 		// Start claude with skip permissions (crew workers are trusted)
 		// Export GT_ROLE and BD_ACTOR since tmux SetEnvironment only affects new panes
 		bdActor := fmt.Sprintf("%s/crew/%s", r.Name, name)
-		claudeCmd := fmt.Sprintf("export GT_ROLE=crew GT_RIG=%s GT_CREW=%s BD_ACTOR=%s && claude --dangerously-skip-permissions", r.Name, name, bdActor)
+		claudeCmd := fmt.Sprintf("export GT_ROLE=crew GT_RIG=%s GT_CREW=%s BD_ACTOR=%s GIT_AUTHOR_NAME=%s && claude --dangerously-skip-permissions", r.Name, name, bdActor, bdActor)
 		if err := t.SendKeys(sessionID, claudeCmd); err != nil {
 			fmt.Printf("Error starting claude for %s: %v\n", arg, err)
 			lastErr = err
@@ -484,7 +484,7 @@ func restartCrewSession(rigName, crewName, clonePath string) error {
 
 	// Start claude with skip permissions
 	bdActor := fmt.Sprintf("%s/crew/%s", rigName, crewName)
-	claudeCmd := fmt.Sprintf("export GT_ROLE=crew GT_RIG=%s GT_CREW=%s BD_ACTOR=%s && claude --dangerously-skip-permissions", rigName, crewName, bdActor)
+	claudeCmd := fmt.Sprintf("export GT_ROLE=crew GT_RIG=%s GT_CREW=%s BD_ACTOR=%s GIT_AUTHOR_NAME=%s && claude --dangerously-skip-permissions", rigName, crewName, bdActor, bdActor)
 	if err := t.SendKeys(sessionID, claudeCmd); err != nil {
 		return fmt.Errorf("starting claude: %w", err)
 	}

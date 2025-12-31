@@ -155,7 +155,7 @@ bd audit --actor=gastown/crew/joe
 
 ## Implementation Status
 
-- [ ] Agent identity in git commits
+- [x] Agent identity in git commits
 - [ ] BD_ACTOR default in beads create
 - [ ] Workspace metadata file
 - [ ] Cross-workspace URI scheme

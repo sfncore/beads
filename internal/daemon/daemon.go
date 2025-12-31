@@ -264,7 +264,7 @@ func (d *Daemon) ensureDeaconRunning() {
 	// Launch Claude directly (no shell respawn loop)
 	// The daemon will detect if Claude exits and restart it on next heartbeat
 	// Export GT_ROLE and BD_ACTOR so Claude inherits them (tmux SetEnvironment doesn't export to processes)
-	if err := d.tmux.SendKeys(DeaconSessionName, "export GT_ROLE=deacon BD_ACTOR=deacon && claude --dangerously-skip-permissions"); err != nil {
+	if err := d.tmux.SendKeys(DeaconSessionName, "export GT_ROLE=deacon BD_ACTOR=deacon GIT_AUTHOR_NAME=deacon && claude --dangerously-skip-permissions"); err != nil {
 		d.logger.Printf("Error launching Claude in Deacon session: %v", err)
 		return
 	}
@@ -312,7 +312,8 @@ func (d *Daemon) ensureWitnessRunning(rigName string) {
 	_ = d.tmux.SetEnvironment(sessionName, "BD_ACTOR", rigName+"-witness")
 
 	// Launch Claude
-	envExport := fmt.Sprintf("export GT_ROLE=witness GT_RIG=%s BD_ACTOR=%s-witness && claude --dangerously-skip-permissions", rigName, rigName)
+	bdActor := fmt.Sprintf("%s/witness", rigName)
+	envExport := fmt.Sprintf("export GT_ROLE=witness GT_RIG=%s BD_ACTOR=%s GIT_AUTHOR_NAME=%s && claude --dangerously-skip-permissions", rigName, bdActor, bdActor)
 	if err := d.tmux.SendKeys(sessionName, envExport); err != nil {
 		d.logger.Printf("Error launching Claude in witness session for %s: %v", rigName, err)
 		return
@@ -610,8 +611,8 @@ func (d *Daemon) restartPolecatSession(rigName, polecatName, sessionName string)
 	_ = d.tmux.SetPaneDiedHook(sessionName, agentID)
 
 	// Launch Claude with environment exported inline
-	startCmd := fmt.Sprintf("export GT_ROLE=polecat GT_RIG=%s GT_POLECAT=%s BD_ACTOR=%s && claude --dangerously-skip-permissions",
-		rigName, polecatName, bdActor)
+	startCmd := fmt.Sprintf("export GT_ROLE=polecat GT_RIG=%s GT_POLECAT=%s BD_ACTOR=%s GIT_AUTHOR_NAME=%s && claude --dangerously-skip-permissions",
+		rigName, polecatName, bdActor, bdActor)
 	if err := d.tmux.SendKeys(sessionName, startCmd); err != nil {
 		return fmt.Errorf("sending startup command: %w", err)
 	}

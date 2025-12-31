@@ -262,9 +262,9 @@ func ensureSession(t *tmux.Tmux, sessionName, workDir, role string) error {
 	var claudeCmd string
 	if role == "deacon" {
 		// Deacon uses respawn loop
-		claudeCmd = `export GT_ROLE=deacon BD_ACTOR=deacon && while true; do echo "⛪ Starting Deacon session..."; claude --dangerously-skip-permissions; echo ""; echo "Deacon exited. Restarting in 2s... (Ctrl-C to stop)"; sleep 2; done`
+		claudeCmd = `export GT_ROLE=deacon BD_ACTOR=deacon GIT_AUTHOR_NAME=deacon && while true; do echo "⛪ Starting Deacon session..."; claude --dangerously-skip-permissions; echo ""; echo "Deacon exited. Restarting in 2s... (Ctrl-C to stop)"; sleep 2; done`
 	} else {
-		claudeCmd = fmt.Sprintf(`export GT_ROLE=%s BD_ACTOR=%s && claude --dangerously-skip-permissions`, role, role)
+		claudeCmd = fmt.Sprintf(`export GT_ROLE=%s BD_ACTOR=%s GIT_AUTHOR_NAME=%s && claude --dangerously-skip-permissions`, role, role, role)
 	}
 
 	if err := t.SendKeysDelayed(sessionName, claudeCmd, 200); err != nil {
@@ -301,7 +301,7 @@ func ensureWitness(t *tmux.Tmux, sessionName, rigPath, rigName string) error {
 
 	// Launch Claude
 	// Export GT_ROLE and BD_ACTOR in the command since tmux SetEnvironment only affects new panes
-	claudeCmd := fmt.Sprintf(`export GT_ROLE=witness BD_ACTOR=%s && claude --dangerously-skip-permissions`, bdActor)
+	claudeCmd := fmt.Sprintf(`export GT_ROLE=witness BD_ACTOR=%s GIT_AUTHOR_NAME=%s && claude --dangerously-skip-permissions`, bdActor, bdActor)
 	if err := t.SendKeysDelayed(sessionName, claudeCmd, 200); err != nil {
 		return err
 	}
@@ -512,7 +512,7 @@ func ensureCrewSession(t *tmux.Tmux, sessionName, crewPath, rigName, crewName st
 	_ = t.ConfigureGasTownSession(sessionName, theme, "", "Crew", crewName)
 
 	// Launch Claude
-	claudeCmd := fmt.Sprintf(`export GT_ROLE=crew GT_RIG=%s GT_CREW=%s BD_ACTOR=%s && claude --dangerously-skip-permissions`, rigName, crewName, bdActor)
+	claudeCmd := fmt.Sprintf(`export GT_ROLE=crew GT_RIG=%s GT_CREW=%s BD_ACTOR=%s GIT_AUTHOR_NAME=%s && claude --dangerously-skip-permissions`, rigName, crewName, bdActor, bdActor)
 	if err := t.SendKeysDelayed(sessionName, claudeCmd, 200); err != nil {
 		return err
 	}
@@ -600,7 +600,7 @@ func ensurePolecatSession(t *tmux.Tmux, sessionName, polecatPath, rigName, polec
 	_ = t.ConfigureGasTownSession(sessionName, theme, "", "Polecat", polecatName)
 
 	// Launch Claude
-	claudeCmd := fmt.Sprintf(`export GT_ROLE=polecat GT_RIG=%s GT_POLECAT=%s BD_ACTOR=%s && claude --dangerously-skip-permissions`, rigName, polecatName, bdActor)
+	claudeCmd := fmt.Sprintf(`export GT_ROLE=polecat GT_RIG=%s GT_POLECAT=%s BD_ACTOR=%s GIT_AUTHOR_NAME=%s && claude --dangerously-skip-permissions`, rigName, polecatName, bdActor, bdActor)
 	if err := t.SendKeysDelayed(sessionName, claudeCmd, 200); err != nil {
 		return err
 	}

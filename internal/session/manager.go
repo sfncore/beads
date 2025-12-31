@@ -178,8 +178,8 @@ func (m *Manager) Start(polecat string, opts StartOptions) error {
 		// Polecats run with full permissions - Gas Town is for grownups
 		// Export env vars inline so Claude's role detection works
 		bdActor := fmt.Sprintf("%s/polecats/%s", m.rig.Name, polecat)
-		command = fmt.Sprintf("export GT_ROLE=polecat GT_RIG=%s GT_POLECAT=%s BD_ACTOR=%s && claude --dangerously-skip-permissions",
-			m.rig.Name, polecat, bdActor)
+		command = fmt.Sprintf("export GT_ROLE=polecat GT_RIG=%s GT_POLECAT=%s BD_ACTOR=%s GIT_AUTHOR_NAME=%s && claude --dangerously-skip-permissions",
+			m.rig.Name, polecat, bdActor, bdActor)
 	}
 	if err := m.tmux.SendKeys(sessionID, command); err != nil {
 		return fmt.Errorf("sending command: %w", err)
