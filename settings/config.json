@@ -1,7 +1,7 @@
 {
-    "type": "town-settings",
-    "version": 1,
-    "default_agent": "opencode",
-    "agents": {},
-    "role_agents": {}
+  "type": "town-settings",
+  "version": 1,
+  "default_agent": "opencode",
+  "agents": {},
+  "role_agents": {}
 }
