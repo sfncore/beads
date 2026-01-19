@@ -1079,13 +1079,13 @@ func fillRuntimeDefaults(rc *RuntimeConfig) *RuntimeConfig {
 	if rc == nil {
 		return DefaultRuntimeConfig()
 	}
-	// Create a copy to avoid modifying the original
 	result := &RuntimeConfig{
+		Provider:      rc.Provider,
 		Command:       rc.Command,
 		Args:          rc.Args,
+		PromptMode:    rc.PromptMode,
 		InitialPrompt: rc.InitialPrompt,
 	}
-	// Copy Env map to avoid mutation and preserve agent-specific env vars
 	if len(rc.Env) > 0 {
 		result.Env = make(map[string]string, len(rc.Env))
 		for k, v := range rc.Env {

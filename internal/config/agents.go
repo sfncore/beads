@@ -137,7 +137,7 @@ var builtinPresets = map[AgentPreset]*AgentPresetInfo{
 		Command:             "codex",
 		Args:                []string{"--yolo"},
 		ProcessNames:        []string{"codex"}, // Codex CLI binary
-		SessionIDEnv:        "", // Codex captures from JSONL output
+		SessionIDEnv:        "",                // Codex captures from JSONL output
 		ResumeFlag:          "resume",
 		ResumeStyle:         "subcommand",
 		SupportsHooks:       false, // Use env/files instead
@@ -196,7 +196,7 @@ var builtinPresets = map[AgentPreset]*AgentPresetInfo{
 		SessionIDEnv:        "",                           // OpenCode manages sessions internally
 		ResumeFlag:          "",                           // No resume support yet
 		ResumeStyle:         "",
-		SupportsHooks:       true,  // Uses .opencode/plugin/gastown.js
+		SupportsHooks:       true, // Uses .opencode/plugin/gastown.js
 		SupportsForkSession: false,
 		NonInteractive: &NonInteractiveConfig{
 			Subcommand: "run",
@@ -362,10 +362,22 @@ func RuntimeConfigFromPreset(preset AgentPreset) *RuntimeConfig {
 		}
 	}
 
+	// Determine provider from preset name for correct normalization
+	// This ensures PromptMode and other defaults are set correctly
+	provider := string(preset)
+	if provider == string(AgentClaude) || provider == string(AgentGemini) || provider == string(AgentCursor) || provider == string(AgentAuggie) || provider == string(AgentAmp) {
+		provider = "claude" // These use claude-style prompt handling
+	} else if provider == string(AgentCodex) {
+		provider = "codex"
+	} else if provider == string(AgentOpenCode) {
+		provider = "opencode"
+	}
+
 	return &RuntimeConfig{
-		Command: info.Command,
-		Args:    append([]string(nil), info.Args...), // Copy to avoid mutation
-		Env:     envCopy,
+		Provider: provider,
+		Command:  info.Command,
+		Args:     append([]string(nil), info.Args...), // Copy to avoid mutation
+		Env:      envCopy,
 	}
 }
 
