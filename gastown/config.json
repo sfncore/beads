@@ -1,0 +1,11 @@
+{
+  "type": "rig",
+  "version": 1,
+  "name": "gastown",
+  "git_url": "https://github.com/sfncore/gastown",
+  "default_branch": "main",
+  "created_at": "2026-01-19T14:44:01.1502423+11:00",
+  "beads": {
+    "prefix": "gt"
+  }
+}

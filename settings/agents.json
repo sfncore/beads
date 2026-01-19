@@ -1,0 +1,31 @@
+{
+    "version": 1,
+    "agents": {
+        "opencode": {
+            "name": "opencode",
+            "command": "opencode",
+            "args": [],
+            "process_names": [
+                "node"
+            ],
+            "session_id_env": "",
+            "resume_flag": "--session",
+            "resume_style": "flag",
+            "supports_hooks": true,
+            "supports_fork_session": false
+        },
+        "claude": {
+            "name": "claude",
+            "command": "claude",
+            "args": [],
+            "process_names": [
+                "claude"
+            ],
+            "session_id_env": "",
+            "resume_flag": "--session-d",
+            "resume_style": "flag",
+            "supports_hooks": true,
+            "supports_fork_session": false
+        }
+    }
+}
