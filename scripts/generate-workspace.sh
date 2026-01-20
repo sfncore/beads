@@ -103,7 +103,7 @@ if [[ -n "$current_worktree" ]]; then
     commits+=("$current_commit")
 fi
 
-# Parse crew workspaces from JSON (manual approach)
+# Parse crew workspaces from JSON (robust approach)
 if [[ -n "$crews_output" ]]; then
     # Extract crew info using python for reliable JSON parsing
     python3 -c "
@@ -172,21 +172,30 @@ for i in "${!paths[@]}"; do
     fi
 done
 
-# Validate crew workspaces
+# Debug: Print what we have before adding crews
+echo "DEBUG: Before adding crews - valid_paths count: ${#valid_paths[@]}"
+
+# Add crew workspaces to validation lists
+echo "DEBUG: About to process ${#crew_paths[@]} crew workspaces"
 for i in "${!crew_paths[@]}"; do
     path="${crew_paths[$i]}"
     name="${crew_names[$i]}"
     branch="${crew_branches[$i]}"
     git_status="${crew_git_status[$i]}"
     
+    echo "DEBUG: Processing crew $i: name=$name, path=$path, branch=$branch"
+    echo "DEBUG: Checking crew: name=$name, path=$path"
     if [[ -d "$path" ]]; then
+        echo "DEBUG: Directory exists, adding crew"
         valid_paths+=("$path")
         valid_branches+=("$branch")
         print_status "  ✓ $name -> $branch (Git: $git_status)"
     else
+        echo "DEBUG: Directory missing for $name at $path"
         print_warning "  ✗ $name -> $branch (directory missing)"
     fi
 done
+echo "DEBUG: After adding crews - valid_paths count: ${#valid_paths[@]}"
 
 # Add potential agent session directories (specific directories where agents edit code)
 print_status "Scanning for agent session directories..."
