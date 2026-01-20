@@ -1,0 +1,11 @@
+{
+  "type": "rig",
+  "version": 1,
+  "name": "beads",
+  "git_url": "https://github.com/steveyegge/beads.git",
+  "default_branch": "main",
+  "created_at": "2026-01-20T06:45:39.889190913+11:00",
+  "beads": {
+    "prefix": "bd"
+  }
+}

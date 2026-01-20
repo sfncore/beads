@@ -1,0 +1,19 @@
+{"ts":"2026-01-19T06:50:45Z","source":"gt","type":"session_start","actor":"mayor","payload":{"actor_pid":"mayor-316515","cwd":"/home/ubuntu/gt","role":"mayor","session_id":"mayor-316515"},"visibility":"feed"}
+{"ts":"2026-01-19T08:20:25Z","source":"gt","type":"session_start","actor":"mayor","payload":{"actor_pid":"mayor-540038","cwd":"/home/ubuntu/gt","role":"mayor","session_id":"mayor-540038"},"visibility":"feed"}
+{"ts":"2026-01-19T17:05:29Z","source":"gt","type":"session_start","actor":"mayor","payload":{"actor_pid":"mayor-44344","cwd":"/home/ubuntu/gt","role":"mayor","session_id":"mayor-44344"},"visibility":"feed"}
+{"ts":"2026-01-19T17:09:32Z","source":"gt","type":"mail","actor":"overseer","payload":{"subject":"OpenCode Provider fix needed on your main branch","to":"gastown/crew/polecatdancers"},"visibility":"feed"}
+{"ts":"2026-01-19T17:28:32Z","source":"gt","type":"spawn","actor":"gt","payload":{"polecat":"furiosa","rig":"gastown"},"visibility":"feed"}
+{"ts":"2026-01-19T17:28:45Z","source":"gt","type":"session_start","actor":"gastown/witness","payload":{"actor_pid":"gastown/witness-61395","cwd":"/home/ubuntu/gt/gastown/witness","role":"gastown/witness","session_id":"gastown/witness-61395","topic":"patrol"},"visibility":"feed"}
+{"ts":"2026-01-19T17:29:39Z","source":"gt","type":"sling","actor":"mayor","payload":{"bead":"gt-db9","target":"gastown/polecats/furiosa"},"visibility":"feed"}
+{"ts":"2026-01-19T17:32:56Z","source":"gt","type":"mail","actor":"gastown/witness","payload":{"subject":"STUCK: furiosa polecat - session stuck after completing work","to":"mayor/"},"visibility":"feed"}
+{"ts":"2026-01-19T17:34:59Z","source":"gt","type":"handoff","actor":"gastown/witness","payload":{"subject":"Witness patrol handoff","to_session":true},"visibility":"feed"}
+{"ts":"2026-01-19T19:37:07Z","source":"gt","type":"spawn","actor":"gt","payload":{"polecat":"rust","rig":"beads_convex"},"visibility":"feed"}
+{"ts":"2026-01-19T19:37:19Z","source":"gt","type":"session_start","actor":"beads_convex/witness","payload":{"actor_pid":"beads_convex/witness-946525","cwd":"/home/ubuntu/gt/beads_convex/witness","role":"beads_convex/witness","session_id":"beads_convex/witness-946525","topic":"patrol"},"visibility":"feed"}
+{"ts":"2026-01-19T19:38:12Z","source":"gt","type":"sling","actor":"mayor","payload":{"bead":"bd-5xj.1","target":"beads_convex/polecats/rust"},"visibility":"feed"}
+{"ts":"2026-01-19T19:40:04Z","source":"gt","type":"mail","actor":"beads_convex/witness","payload":{"subject":"Polecat Stuck: OAuth authentication failure","to":"mayor/"},"visibility":"feed"}
+{"ts":"2026-01-20T01:01:50Z","source":"gt","type":"spawn","actor":"gt","payload":{"polecat":"furiosa","rig":"gastown"},"visibility":"feed"}
+{"ts":"2026-01-20T01:05:09Z","source":"gt","type":"spawn","actor":"gt","payload":{"polecat":"obsidian","rig":"beads"},"visibility":"feed"}
+{"ts":"2026-01-20T01:05:26Z","source":"gt","type":"session_start","actor":"beads/witness","payload":{"actor_pid":"beads/witness-1912395","cwd":"/home/ubuntu/gt/beads/witness","role":"beads/witness","session_id":"beads/witness-1912395","topic":"patrol"},"visibility":"feed"}
+{"ts":"2026-01-20T01:05:50Z","source":"gt","type":"session_start","actor":"mayor","payload":{"actor_pid":"mayor-1914262","cwd":"/home/ubuntu/gt","role":"mayor","session_id":"mayor-1914262"},"visibility":"feed"}
+{"ts":"2026-01-20T01:06:16Z","source":"gt","type":"sling","actor":"mayor","payload":{"bead":"gt-ptx","target":"beads/polecats/obsidian"},"visibility":"feed"}
+{"ts":"2026-01-20T01:10:51Z","source":"gt","type":"session_start","actor":"mayor","payload":{"actor_pid":"mayor-1944711","cwd":"/home/ubuntu/gt","role":"mayor","session_id":"mayor-1944711"},"visibility":"feed"}

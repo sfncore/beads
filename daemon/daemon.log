@@ -1,0 +1,1282 @@
+2026/01/19 17:44:43 Daemon starting (PID 294196)
+2026/01/19 17:44:43 Daemon running, recovery heartbeat interval 3m0s
+2026/01/19 17:44:43 Feed curator started
+2026/01/19 17:44:43 Convoy watcher started
+2026/01/19 17:44:43 Heartbeat starting (recovery-focused)
+2026/01/19 17:45:49 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 17:45:49 Spawning Boot for triage...
+2026/01/19 17:45:49 Boot spawned successfully
+2026/01/19 17:45:49 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 17:46:55 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 17:46:55 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 17:46:58 Refinery session for gastown started successfully
+2026/01/19 17:47:01 Heartbeat complete (#1)
+2026/01/19 17:48:01 Heartbeat starting (recovery-focused)
+2026/01/19 17:49:04 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 17:49:04 Spawning Boot for triage...
+2026/01/19 17:49:04 Boot spawned successfully
+2026/01/19 17:49:04 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 17:50:10 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 17:50:10 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 17:50:13 Refinery session for gastown started successfully
+2026/01/19 17:50:16 Heartbeat complete (#2)
+2026/01/19 17:53:33 Heartbeat starting (recovery-focused)
+2026/01/19 17:54:40 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 17:54:40 Spawning Boot for triage...
+2026/01/19 17:54:40 Boot spawned successfully
+2026/01/19 17:54:40 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 17:55:46 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 17:55:46 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 17:55:49 Refinery session for gastown started successfully
+2026/01/19 17:55:52 Heartbeat complete (#3)
+2026/01/19 17:59:07 Heartbeat starting (recovery-focused)
+2026/01/19 18:00:13 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:00:13 Spawning Boot for triage...
+2026/01/19 18:00:13 Boot spawned successfully
+2026/01/19 18:00:13 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:01:20 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:01:20 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:01:23 Refinery session for gastown started successfully
+2026/01/19 18:01:25 Heartbeat complete (#4)
+2026/01/19 18:04:43 Heartbeat starting (recovery-focused)
+2026/01/19 18:05:49 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:05:49 Spawning Boot for triage...
+2026/01/19 18:05:49 Boot spawned successfully
+2026/01/19 18:05:51 Heartbeat complete (#5)
+2026/01/19 18:09:06 Heartbeat starting (recovery-focused)
+2026/01/19 18:10:12 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:10:12 Spawning Boot for triage...
+2026/01/19 18:10:12 Boot spawned successfully
+2026/01/19 18:10:15 Heartbeat complete (#6)
+2026/01/19 18:13:32 Heartbeat starting (recovery-focused)
+2026/01/19 18:13:36 Deacon started successfully
+2026/01/19 18:13:36 Spawning Boot for triage...
+2026/01/19 18:13:36 Boot spawned successfully
+2026/01/19 18:13:36 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 18:13:36 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:14:42 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:14:42 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:14:45 Refinery session for gastown started successfully
+2026/01/19 18:14:48 Heartbeat complete (#7)
+2026/01/19 18:18:03 Heartbeat starting (recovery-focused)
+2026/01/19 18:19:09 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:19:09 Spawning Boot for triage...
+2026/01/19 18:19:09 Boot spawned successfully
+2026/01/19 18:19:09 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:20:15 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:20:15 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:20:18 Refinery session for gastown started successfully
+2026/01/19 18:20:21 Heartbeat complete (#8)
+2026/01/19 18:23:39 Heartbeat starting (recovery-focused)
+2026/01/19 18:24:45 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:24:45 Spawning Boot for triage...
+2026/01/19 18:24:45 Boot spawned successfully
+2026/01/19 18:24:45 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:25:51 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:25:51 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:25:55 Refinery session for gastown started successfully
+2026/01/19 18:25:57 Heartbeat complete (#9)
+2026/01/19 18:29:12 Heartbeat starting (recovery-focused)
+2026/01/19 18:29:15 Deacon started successfully
+2026/01/19 18:29:15 Spawning Boot for triage...
+2026/01/19 18:29:15 Boot spawned successfully
+2026/01/19 18:29:15 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 18:29:15 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:30:22 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:30:22 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:30:25 Refinery session for gastown started successfully
+2026/01/19 18:30:27 Heartbeat complete (#10)
+2026/01/19 18:33:45 Heartbeat starting (recovery-focused)
+2026/01/19 18:33:49 Deacon started successfully
+2026/01/19 18:33:49 Spawning Boot for triage...
+2026/01/19 18:33:49 Boot spawned successfully
+2026/01/19 18:33:49 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 18:33:49 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:34:55 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:34:55 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:34:58 Refinery session for gastown started successfully
+2026/01/19 18:35:01 Heartbeat complete (#11)
+2026/01/19 18:38:18 Heartbeat starting (recovery-focused)
+2026/01/19 18:39:24 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:39:24 Spawning Boot for triage...
+2026/01/19 18:39:24 Boot spawned successfully
+2026/01/19 18:39:24 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:40:28 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:40:28 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:40:31 Refinery session for gastown started successfully
+2026/01/19 18:40:36 Heartbeat complete (#12)
+2026/01/19 18:43:51 Heartbeat starting (recovery-focused)
+2026/01/19 18:43:55 Deacon started successfully
+2026/01/19 18:43:55 Spawning Boot for triage...
+2026/01/19 18:43:55 Boot spawned successfully
+2026/01/19 18:43:55 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 18:43:55 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:45:01 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:45:01 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:45:04 Refinery session for gastown started successfully
+2026/01/19 18:45:07 Heartbeat complete (#13)
+2026/01/19 18:48:24 Heartbeat starting (recovery-focused)
+2026/01/19 18:48:28 Deacon started successfully
+2026/01/19 18:48:28 Spawning Boot for triage...
+2026/01/19 18:48:28 Boot spawned successfully
+2026/01/19 18:48:28 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 18:48:28 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:49:34 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:49:34 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:49:37 Refinery session for gastown started successfully
+2026/01/19 18:49:40 Heartbeat complete (#14)
+2026/01/19 18:52:55 Heartbeat starting (recovery-focused)
+2026/01/19 18:54:01 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:54:01 Spawning Boot for triage...
+2026/01/19 18:54:01 Boot spawned successfully
+2026/01/19 18:54:01 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:55:07 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:55:07 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 18:55:10 Refinery session for gastown started successfully
+2026/01/19 18:55:13 Heartbeat complete (#15)
+2026/01/19 18:58:31 Heartbeat starting (recovery-focused)
+2026/01/19 18:59:37 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 18:59:37 Spawning Boot for triage...
+2026/01/19 18:59:37 Boot spawned successfully
+2026/01/19 18:59:37 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:00:43 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:00:43 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:00:46 Refinery session for gastown started successfully
+2026/01/19 19:00:49 Heartbeat complete (#16)
+2026/01/19 19:04:04 Heartbeat starting (recovery-focused)
+2026/01/19 19:05:10 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:05:10 Spawning Boot for triage...
+2026/01/19 19:05:10 Boot spawned successfully
+2026/01/19 19:05:10 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:06:16 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:06:16 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:06:19 Refinery session for gastown started successfully
+2026/01/19 19:06:22 Heartbeat complete (#17)
+2026/01/19 19:09:40 Heartbeat starting (recovery-focused)
+2026/01/19 19:10:46 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:10:46 Spawning Boot for triage...
+2026/01/19 19:10:46 Boot spawned successfully
+2026/01/19 19:10:46 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:11:49 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:11:49 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:11:55 Refinery session for gastown started successfully
+2026/01/19 19:11:58 Heartbeat complete (#18)
+2026/01/19 19:15:13 Heartbeat starting (recovery-focused)
+2026/01/19 19:16:19 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:16:19 Spawning Boot for triage...
+2026/01/19 19:16:19 Boot spawned successfully
+2026/01/19 19:16:19 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:17:25 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:17:25 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:17:28 Refinery session for gastown started successfully
+2026/01/19 19:17:31 Heartbeat complete (#19)
+2026/01/19 19:20:49 Heartbeat starting (recovery-focused)
+2026/01/19 19:20:52 Deacon started successfully
+2026/01/19 19:20:52 Spawning Boot for triage...
+2026/01/19 19:20:52 Boot spawned successfully
+2026/01/19 19:20:52 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 19:20:52 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:20:56 Witness session for gastown started successfully
+2026/01/19 19:20:56 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:20:59 Refinery session for gastown started successfully
+2026/01/19 19:21:02 Heartbeat complete (#20)
+2026/01/19 19:24:20 Heartbeat starting (recovery-focused)
+2026/01/19 19:25:23 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:25:23 Spawning Boot for triage...
+2026/01/19 19:25:23 Boot spawned successfully
+2026/01/19 19:25:23 Deacon started recently (4m10s ago), skipping heartbeat check
+2026/01/19 19:25:23 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 19:26:29 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:26:29 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:26:34 Witness session for gastown started successfully
+2026/01/19 19:26:34 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 19:26:37 Refinery session for beads_convex started successfully
+2026/01/19 19:26:37 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:26:43 Refinery session for gastown started successfully
+2026/01/19 19:26:46 Heartbeat complete (#21)
+2026/01/19 19:30:01 Heartbeat starting (recovery-focused)
+2026/01/19 19:31:07 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:31:07 Spawning Boot for triage...
+2026/01/19 19:31:07 Boot spawned successfully
+2026/01/19 19:31:07 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 19:32:13 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:32:13 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:33:20 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:33:20 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 19:33:23 Refinery session for beads_convex started successfully
+2026/01/19 19:33:23 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:33:26 Refinery session for gastown started successfully
+2026/01/19 19:33:29 Heartbeat complete (#22)
+2026/01/19 19:36:46 Heartbeat starting (recovery-focused)
+2026/01/19 19:37:50 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:37:50 Spawning Boot for triage...
+2026/01/19 19:37:50 Boot spawned successfully
+2026/01/19 19:37:50 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 19:38:56 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:38:56 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:39:00 Witness session for gastown started successfully
+2026/01/19 19:39:00 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 19:39:06 Refinery session for beads_convex started successfully
+2026/01/19 19:39:06 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:39:09 Refinery session for gastown started successfully
+2026/01/19 19:39:11 Heartbeat complete (#23)
+2026/01/19 19:42:26 Heartbeat starting (recovery-focused)
+2026/01/19 19:42:30 Deacon started successfully
+2026/01/19 19:42:30 Spawning Boot for triage...
+2026/01/19 19:42:30 Boot spawned successfully
+2026/01/19 19:42:30 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 19:42:30 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 19:43:36 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:43:36 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:44:43 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:44:43 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 19:44:46 Refinery session for beads_convex started successfully
+2026/01/19 19:44:46 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:44:49 Refinery session for gastown started successfully
+2026/01/19 19:44:51 Heartbeat complete (#24)
+2026/01/19 19:48:09 Heartbeat starting (recovery-focused)
+2026/01/19 19:48:13 Deacon started successfully
+2026/01/19 19:48:13 Spawning Boot for triage...
+2026/01/19 19:48:13 Boot spawned successfully
+2026/01/19 19:48:13 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 19:48:13 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 19:49:19 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:49:19 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:49:23 Witness session for gastown started successfully
+2026/01/19 19:49:23 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 19:49:26 Refinery session for beads_convex started successfully
+2026/01/19 19:49:26 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:49:29 Refinery session for gastown started successfully
+2026/01/19 19:49:32 Heartbeat complete (#25)
+2026/01/19 19:52:50 Heartbeat starting (recovery-focused)
+2026/01/19 19:52:53 Deacon started successfully
+2026/01/19 19:52:53 Spawning Boot for triage...
+2026/01/19 19:52:53 Boot spawned successfully
+2026/01/19 19:52:53 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 19:52:53 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:54:00 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:54:00 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 19:54:03 Witness session for beads_convex started successfully
+2026/01/19 19:54:03 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 19:54:06 Refinery session for beads_convex started successfully
+2026/01/19 19:54:06 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:54:10 Refinery session for gastown started successfully
+2026/01/19 19:54:12 Heartbeat complete (#26)
+2026/01/19 19:57:30 Heartbeat starting (recovery-focused)
+2026/01/19 19:58:36 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:58:36 Spawning Boot for triage...
+2026/01/19 19:58:36 Boot spawned successfully
+2026/01/19 19:58:36 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 19:59:39 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 19:59:39 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:59:46 Witness session for gastown started successfully
+2026/01/19 19:59:46 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 19:59:49 Refinery session for beads_convex started successfully
+2026/01/19 19:59:49 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 19:59:52 Refinery session for gastown started successfully
+2026/01/19 19:59:55 Heartbeat complete (#27)
+2026/01/19 20:03:10 Heartbeat starting (recovery-focused)
+2026/01/19 20:04:16 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:04:16 Spawning Boot for triage...
+2026/01/19 20:04:16 Boot spawned successfully
+2026/01/19 20:04:16 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:05:23 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:05:23 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:06:29 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:06:29 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:06:32 Refinery session for beads_convex started successfully
+2026/01/19 20:06:32 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:06:35 Refinery session for gastown started successfully
+2026/01/19 20:06:38 Heartbeat complete (#28)
+2026/01/19 20:09:55 Heartbeat starting (recovery-focused)
+2026/01/19 20:11:01 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:11:01 Spawning Boot for triage...
+2026/01/19 20:11:02 Boot spawned successfully
+2026/01/19 20:11:02 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:12:05 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:12:05 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:13:11 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:13:11 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:13:14 Refinery session for beads_convex started successfully
+2026/01/19 20:13:14 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:13:17 Refinery session for gastown started successfully
+2026/01/19 20:13:23 Heartbeat complete (#29)
+2026/01/19 20:16:38 Heartbeat starting (recovery-focused)
+2026/01/19 20:16:41 Deacon started successfully
+2026/01/19 20:16:41 Spawning Boot for triage...
+2026/01/19 20:16:41 Boot spawned successfully
+2026/01/19 20:16:41 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 20:16:41 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:17:48 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:17:48 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:18:54 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:18:54 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:18:57 Refinery session for beads_convex started successfully
+2026/01/19 20:18:57 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:19:00 Refinery session for gastown started successfully
+2026/01/19 20:19:03 Heartbeat complete (#30)
+2026/01/19 20:22:21 Heartbeat starting (recovery-focused)
+2026/01/19 20:22:24 Deacon started successfully
+2026/01/19 20:22:24 Spawning Boot for triage...
+2026/01/19 20:22:24 Boot spawned successfully
+2026/01/19 20:22:24 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 20:22:24 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:23:31 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:23:31 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:24:37 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:24:37 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:24:40 Refinery session for beads_convex started successfully
+2026/01/19 20:24:40 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:24:43 Refinery session for gastown started successfully
+2026/01/19 20:24:46 Heartbeat complete (#31)
+2026/01/19 20:28:01 Heartbeat starting (recovery-focused)
+2026/01/19 20:29:07 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:29:07 Spawning Boot for triage...
+2026/01/19 20:29:07 Boot spawned successfully
+2026/01/19 20:29:07 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:30:13 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:30:13 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:31:19 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:31:19 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:31:22 Refinery session for beads_convex started successfully
+2026/01/19 20:31:22 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:31:26 Refinery session for gastown started successfully
+2026/01/19 20:31:28 Heartbeat complete (#32)
+2026/01/19 20:34:46 Heartbeat starting (recovery-focused)
+2026/01/19 20:34:50 Deacon started successfully
+2026/01/19 20:34:50 Spawning Boot for triage...
+2026/01/19 20:34:50 Boot spawned successfully
+2026/01/19 20:34:50 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 20:34:50 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:35:56 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:35:56 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:37:02 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:37:02 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:37:05 Refinery session for beads_convex started successfully
+2026/01/19 20:37:05 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:37:09 Refinery session for gastown started successfully
+2026/01/19 20:37:11 Heartbeat complete (#33)
+2026/01/19 20:40:26 Heartbeat starting (recovery-focused)
+2026/01/19 20:40:30 Deacon started successfully
+2026/01/19 20:40:30 Spawning Boot for triage...
+2026/01/19 20:40:30 Boot spawned successfully
+2026/01/19 20:40:30 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 20:40:30 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:40:36 Witness session for beads_convex started successfully
+2026/01/19 20:40:36 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:41:40 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:41:40 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:41:46 Refinery session for beads_convex started successfully
+2026/01/19 20:41:46 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:41:49 Refinery session for gastown started successfully
+2026/01/19 20:41:52 Heartbeat complete (#34)
+2026/01/19 20:45:06 Heartbeat starting (recovery-focused)
+2026/01/19 20:46:13 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:46:13 Spawning Boot for triage...
+2026/01/19 20:46:13 Boot spawned successfully
+2026/01/19 20:46:13 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:47:19 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:47:19 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:48:25 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:48:25 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:48:28 Refinery session for beads_convex started successfully
+2026/01/19 20:48:28 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:48:31 Refinery session for gastown started successfully
+2026/01/19 20:48:34 Heartbeat complete (#35)
+2026/01/19 20:51:52 Heartbeat starting (recovery-focused)
+2026/01/19 20:52:58 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:52:58 Spawning Boot for triage...
+2026/01/19 20:52:58 Boot spawned successfully
+2026/01/19 20:52:58 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:54:01 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:54:01 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:55:08 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 20:55:08 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:55:11 Refinery session for gastown started successfully
+2026/01/19 20:55:11 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:55:14 Refinery session for beads_convex started successfully
+2026/01/19 20:55:17 Heartbeat complete (#36)
+2026/01/19 20:58:34 Heartbeat starting (recovery-focused)
+2026/01/19 20:58:38 Deacon started successfully
+2026/01/19 20:58:38 Spawning Boot for triage...
+2026/01/19 20:58:38 Boot spawned successfully
+2026/01/19 20:58:38 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 20:58:38 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:58:42 Witness session for beads_convex started successfully
+2026/01/19 20:58:42 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:58:46 Witness session for gastown started successfully
+2026/01/19 20:58:46 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 20:58:49 Refinery session for gastown started successfully
+2026/01/19 20:58:49 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 20:58:55 Refinery session for beads_convex started successfully
+2026/01/19 20:58:57 Heartbeat complete (#37)
+2026/01/19 21:02:12 Heartbeat starting (recovery-focused)
+2026/01/19 21:03:18 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:03:18 Spawning Boot for triage...
+2026/01/19 21:03:18 Boot spawned successfully
+2026/01/19 21:03:18 Deacon started recently (4m17s ago), skipping heartbeat check
+2026/01/19 21:03:18 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:04:25 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:04:25 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:05:31 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:05:31 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:05:34 Refinery session for beads_convex started successfully
+2026/01/19 21:05:34 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:05:37 Refinery session for gastown started successfully
+2026/01/19 21:05:40 Heartbeat complete (#38)
+2026/01/19 21:08:58 Heartbeat starting (recovery-focused)
+2026/01/19 21:10:01 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:10:01 Spawning Boot for triage...
+2026/01/19 21:10:01 Boot spawned successfully
+2026/01/19 21:10:01 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:10:08 Witness session for beads_convex started successfully
+2026/01/19 21:10:08 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:11:11 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:11:11 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:11:14 Refinery session for beads_convex started successfully
+2026/01/19 21:11:14 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:11:20 Refinery session for gastown started successfully
+2026/01/19 21:11:23 Heartbeat complete (#39)
+2026/01/19 21:14:38 Heartbeat starting (recovery-focused)
+2026/01/19 21:15:44 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:15:44 Spawning Boot for triage...
+2026/01/19 21:15:44 Boot spawned successfully
+2026/01/19 21:15:44 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:16:50 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:16:50 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:17:56 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:17:56 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:17:59 Refinery session for beads_convex started successfully
+2026/01/19 21:17:59 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:18:03 Refinery session for gastown started successfully
+2026/01/19 21:18:05 Heartbeat complete (#40)
+2026/01/19 21:21:23 Heartbeat starting (recovery-focused)
+2026/01/19 21:22:26 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:22:26 Spawning Boot for triage...
+2026/01/19 21:22:26 Boot spawned successfully
+2026/01/19 21:22:26 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:22:33 Witness session for beads_convex started successfully
+2026/01/19 21:22:33 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:22:37 Witness session for gastown started successfully
+2026/01/19 21:22:37 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:22:40 Refinery session for beads_convex started successfully
+2026/01/19 21:22:40 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:22:43 Refinery session for gastown started successfully
+2026/01/19 21:22:46 Heartbeat complete (#41)
+2026/01/19 21:26:01 Heartbeat starting (recovery-focused)
+2026/01/19 21:26:07 Deacon started successfully
+2026/01/19 21:26:07 Spawning Boot for triage...
+2026/01/19 21:26:07 Boot spawned successfully
+2026/01/19 21:26:07 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 21:26:07 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:26:11 Witness session for beads_convex started successfully
+2026/01/19 21:26:11 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:27:17 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:27:17 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:27:20 Refinery session for beads_convex started successfully
+2026/01/19 21:27:20 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:27:23 Refinery session for gastown started successfully
+2026/01/19 21:27:26 Heartbeat complete (#42)
+2026/01/19 21:30:41 Heartbeat starting (recovery-focused)
+2026/01/19 21:30:44 Deacon started successfully
+2026/01/19 21:30:44 Spawning Boot for triage...
+2026/01/19 21:30:44 Boot spawned successfully
+2026/01/19 21:30:44 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 21:30:44 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:31:51 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:31:51 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:32:57 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:32:57 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:33:00 Refinery session for beads_convex started successfully
+2026/01/19 21:33:00 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:33:03 Refinery session for gastown started successfully
+2026/01/19 21:33:06 Heartbeat complete (#43)
+2026/01/19 21:36:24 Heartbeat starting (recovery-focused)
+2026/01/19 21:37:30 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:37:30 Spawning Boot for triage...
+2026/01/19 21:37:30 Boot spawned successfully
+2026/01/19 21:37:30 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:38:36 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:38:36 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:38:40 Witness session for gastown started successfully
+2026/01/19 21:38:40 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:38:43 Refinery session for beads_convex started successfully
+2026/01/19 21:38:43 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:38:46 Refinery session for gastown started successfully
+2026/01/19 21:38:49 Heartbeat complete (#44)
+2026/01/19 21:42:07 Heartbeat starting (recovery-focused)
+2026/01/19 21:43:13 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:43:13 Spawning Boot for triage...
+2026/01/19 21:43:13 Boot spawned successfully
+2026/01/19 21:43:13 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:44:16 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:44:16 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:44:20 Witness session for gastown started successfully
+2026/01/19 21:44:20 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:44:26 Refinery session for beads_convex started successfully
+2026/01/19 21:44:26 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:44:29 Refinery session for gastown started successfully
+2026/01/19 21:44:32 Heartbeat complete (#45)
+2026/01/19 21:47:47 Heartbeat starting (recovery-focused)
+2026/01/19 21:47:50 Deacon started successfully
+2026/01/19 21:47:50 Spawning Boot for triage...
+2026/01/19 21:47:50 Boot spawned successfully
+2026/01/19 21:47:50 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 21:47:50 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:48:57 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:48:57 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:50:03 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:50:03 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:50:06 Refinery session for beads_convex started successfully
+2026/01/19 21:50:06 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:50:09 Refinery session for gastown started successfully
+2026/01/19 21:50:12 Heartbeat complete (#46)
+2026/01/19 21:53:30 Heartbeat starting (recovery-focused)
+2026/01/19 21:53:34 Deacon started successfully
+2026/01/19 21:53:34 Spawning Boot for triage...
+2026/01/19 21:53:34 Boot spawned successfully
+2026/01/19 21:53:34 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 21:53:34 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:54:40 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:54:40 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:55:46 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 21:55:46 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 21:55:50 Refinery session for beads_convex started successfully
+2026/01/19 21:55:50 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 21:55:53 Refinery session for gastown started successfully
+2026/01/19 21:55:56 Heartbeat complete (#47)
+2026/01/19 21:59:13 Heartbeat starting (recovery-focused)
+2026/01/19 22:00:17 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:00:17 Spawning Boot for triage...
+2026/01/19 22:00:17 Boot spawned successfully
+2026/01/19 22:00:17 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:01:23 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:01:23 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:01:27 Witness session for gastown started successfully
+2026/01/19 22:01:27 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:01:33 Refinery session for beads_convex started successfully
+2026/01/19 22:01:33 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:01:36 Refinery session for gastown started successfully
+2026/01/19 22:01:39 Heartbeat complete (#48)
+2026/01/19 22:04:53 Heartbeat starting (recovery-focused)
+2026/01/19 22:04:57 Deacon started successfully
+2026/01/19 22:04:57 Spawning Boot for triage...
+2026/01/19 22:04:57 Boot spawned successfully
+2026/01/19 22:04:57 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 22:04:57 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:06:03 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:06:03 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:07:10 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:07:10 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:07:13 Refinery session for beads_convex started successfully
+2026/01/19 22:07:13 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:07:16 Refinery session for gastown started successfully
+2026/01/19 22:07:18 Heartbeat complete (#49)
+2026/01/19 22:10:36 Heartbeat starting (recovery-focused)
+2026/01/19 22:11:42 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:11:42 Spawning Boot for triage...
+2026/01/19 22:11:42 Boot spawned successfully
+2026/01/19 22:11:42 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:12:49 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:12:49 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:13:52 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:13:52 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:13:58 Refinery session for beads_convex started successfully
+2026/01/19 22:13:58 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:14:01 Refinery session for gastown started successfully
+2026/01/19 22:14:04 Heartbeat complete (#50)
+2026/01/19 22:17:19 Heartbeat starting (recovery-focused)
+2026/01/19 22:17:22 Deacon started successfully
+2026/01/19 22:17:22 Spawning Boot for triage...
+2026/01/19 22:17:22 Boot spawned successfully
+2026/01/19 22:17:22 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 22:17:22 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:18:29 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:18:29 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:18:32 Witness session for gastown started successfully
+2026/01/19 22:18:32 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:18:35 Refinery session for beads_convex started successfully
+2026/01/19 22:18:35 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:18:41 Refinery session for gastown started successfully
+2026/01/19 22:18:44 Heartbeat complete (#51)
+2026/01/19 22:21:48 Heartbeat starting (recovery-focused)
+2026/01/19 22:22:48 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:22:48 Spawning Boot for triage...
+2026/01/19 22:22:48 Boot spawned successfully
+2026/01/19 22:22:48 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:23:48 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:23:48 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:24:49 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:24:49 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:24:52 Refinery session for beads_convex started successfully
+2026/01/19 22:24:52 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:24:55 Refinery session for gastown started successfully
+2026/01/19 22:24:58 Heartbeat complete (#52)
+2026/01/19 22:27:58 Heartbeat starting (recovery-focused)
+2026/01/19 22:28:58 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:28:58 Spawning Boot for triage...
+2026/01/19 22:28:58 Boot spawned successfully
+2026/01/19 22:28:58 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:29:58 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:29:58 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:30:59 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:30:59 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:31:02 Refinery session for gastown started successfully
+2026/01/19 22:31:02 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:31:05 Refinery session for beads_convex started successfully
+2026/01/19 22:31:08 Heartbeat complete (#53)
+2026/01/19 22:34:08 Heartbeat starting (recovery-focused)
+2026/01/19 22:35:08 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:35:08 Spawning Boot for triage...
+2026/01/19 22:35:08 Boot spawned successfully
+2026/01/19 22:35:08 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:36:08 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:36:08 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:36:12 Witness session for beads_convex started successfully
+2026/01/19 22:36:12 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:36:15 Refinery session for beads_convex started successfully
+2026/01/19 22:36:15 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:36:18 Refinery session for gastown started successfully
+2026/01/19 22:36:21 Heartbeat complete (#54)
+2026/01/19 22:39:21 Heartbeat starting (recovery-focused)
+2026/01/19 22:39:25 Deacon started successfully
+2026/01/19 22:39:25 Spawning Boot for triage...
+2026/01/19 22:39:25 Boot spawned successfully
+2026/01/19 22:39:25 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 22:39:25 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:40:25 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:40:25 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:41:26 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:41:26 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:41:29 Refinery session for beads_convex started successfully
+2026/01/19 22:41:29 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:41:32 Refinery session for gastown started successfully
+2026/01/19 22:41:35 Heartbeat complete (#55)
+2026/01/19 22:44:35 Heartbeat starting (recovery-focused)
+2026/01/19 22:45:35 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:45:35 Spawning Boot for triage...
+2026/01/19 22:45:36 Boot spawned successfully
+2026/01/19 22:45:36 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:46:36 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:46:36 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:47:36 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:47:36 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:47:39 Refinery session for beads_convex started successfully
+2026/01/19 22:47:39 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:47:43 Refinery session for gastown started successfully
+2026/01/19 22:47:46 Heartbeat complete (#56)
+2026/01/19 22:50:46 Heartbeat starting (recovery-focused)
+2026/01/19 22:50:50 Deacon started successfully
+2026/01/19 22:50:50 Spawning Boot for triage...
+2026/01/19 22:50:50 Boot spawned successfully
+2026/01/19 22:50:50 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 22:50:50 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:51:50 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:51:50 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:52:50 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:52:50 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:52:54 Refinery session for beads_convex started successfully
+2026/01/19 22:52:54 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:52:57 Refinery session for gastown started successfully
+2026/01/19 22:53:00 Heartbeat complete (#57)
+2026/01/19 22:56:00 Heartbeat starting (recovery-focused)
+2026/01/19 22:57:00 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:57:00 Spawning Boot for triage...
+2026/01/19 22:57:00 Boot spawned successfully
+2026/01/19 22:57:00 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:58:01 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:58:01 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:59:01 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 22:59:01 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 22:59:04 Refinery session for beads_convex started successfully
+2026/01/19 22:59:04 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 22:59:07 Refinery session for gastown started successfully
+2026/01/19 22:59:10 Heartbeat complete (#58)
+2026/01/19 23:02:10 Heartbeat starting (recovery-focused)
+2026/01/19 23:03:10 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:03:10 Spawning Boot for triage...
+2026/01/19 23:03:10 Boot spawned successfully
+2026/01/19 23:03:10 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:04:11 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:04:11 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:05:11 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:05:11 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:05:14 Refinery session for beads_convex started successfully
+2026/01/19 23:05:14 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:05:17 Refinery session for gastown started successfully
+2026/01/19 23:05:21 Heartbeat complete (#59)
+2026/01/19 23:08:21 Heartbeat starting (recovery-focused)
+2026/01/19 23:09:21 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:09:21 Spawning Boot for triage...
+2026/01/19 23:09:21 Boot spawned successfully
+2026/01/19 23:09:21 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:10:21 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:10:21 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:11:22 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:11:22 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:11:25 Refinery session for gastown started successfully
+2026/01/19 23:11:25 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:11:28 Refinery session for beads_convex started successfully
+2026/01/19 23:11:31 Heartbeat complete (#60)
+2026/01/19 23:14:31 Heartbeat starting (recovery-focused)
+2026/01/19 23:15:31 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:15:31 Spawning Boot for triage...
+2026/01/19 23:15:31 Boot spawned successfully
+2026/01/19 23:15:31 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:16:32 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:16:32 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:17:32 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:17:32 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:17:35 Refinery session for beads_convex started successfully
+2026/01/19 23:17:35 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:17:38 Refinery session for gastown started successfully
+2026/01/19 23:17:42 Heartbeat complete (#61)
+2026/01/19 23:20:42 Heartbeat starting (recovery-focused)
+2026/01/19 23:21:42 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:21:42 Spawning Boot for triage...
+2026/01/19 23:21:42 Boot spawned successfully
+2026/01/19 23:21:42 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:22:42 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:22:42 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:22:46 Witness session for gastown started successfully
+2026/01/19 23:22:46 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:22:49 Refinery session for gastown started successfully
+2026/01/19 23:22:49 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:22:52 Refinery session for beads_convex started successfully
+2026/01/19 23:22:56 Heartbeat complete (#62)
+2026/01/19 23:25:56 Heartbeat starting (recovery-focused)
+2026/01/19 23:26:56 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:26:56 Spawning Boot for triage...
+2026/01/19 23:26:56 Boot spawned successfully
+2026/01/19 23:26:56 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:27:56 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:27:56 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:28:57 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:28:57 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:29:00 Refinery session for beads_convex started successfully
+2026/01/19 23:29:00 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:29:03 Refinery session for gastown started successfully
+2026/01/19 23:29:06 Heartbeat complete (#63)
+2026/01/19 23:32:06 Heartbeat starting (recovery-focused)
+2026/01/19 23:33:06 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:33:06 Spawning Boot for triage...
+2026/01/19 23:33:06 Boot spawned successfully
+2026/01/19 23:33:06 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:34:07 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:34:07 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:34:10 Witness session for beads_convex started successfully
+2026/01/19 23:34:10 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:34:13 Refinery session for beads_convex started successfully
+2026/01/19 23:34:13 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:34:17 Refinery session for gastown started successfully
+2026/01/19 23:34:20 Heartbeat complete (#64)
+2026/01/19 23:37:20 Heartbeat starting (recovery-focused)
+2026/01/19 23:37:23 Deacon started successfully
+2026/01/19 23:37:23 Spawning Boot for triage...
+2026/01/19 23:37:23 Boot spawned successfully
+2026/01/19 23:37:23 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 23:37:23 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:38:24 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:38:24 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:39:24 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:39:24 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:39:27 Refinery session for beads_convex started successfully
+2026/01/19 23:39:27 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:39:30 Refinery session for gastown started successfully
+2026/01/19 23:39:34 Heartbeat complete (#65)
+2026/01/19 23:42:34 Heartbeat starting (recovery-focused)
+2026/01/19 23:42:37 Deacon started successfully
+2026/01/19 23:42:37 Spawning Boot for triage...
+2026/01/19 23:42:37 Boot spawned successfully
+2026/01/19 23:42:37 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/19 23:42:37 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:43:38 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:43:38 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:44:38 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:44:38 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:44:41 Refinery session for beads_convex started successfully
+2026/01/19 23:44:41 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:44:44 Refinery session for gastown started successfully
+2026/01/19 23:44:47 Heartbeat complete (#66)
+2026/01/19 23:47:47 Heartbeat starting (recovery-focused)
+2026/01/19 23:48:47 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:48:47 Spawning Boot for triage...
+2026/01/19 23:48:48 Boot spawned successfully
+2026/01/19 23:48:48 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:49:48 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:49:48 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:50:48 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:50:48 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:50:51 Refinery session for beads_convex started successfully
+2026/01/19 23:50:51 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:50:55 Refinery session for gastown started successfully
+2026/01/19 23:50:58 Heartbeat complete (#67)
+2026/01/19 23:53:58 Heartbeat starting (recovery-focused)
+2026/01/19 23:54:58 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:54:58 Spawning Boot for triage...
+2026/01/19 23:54:58 Boot spawned successfully
+2026/01/19 23:54:58 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:55:58 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:55:58 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:56:59 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/19 23:56:59 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/19 23:57:02 Refinery session for beads_convex started successfully
+2026/01/19 23:57:02 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/19 23:57:05 Refinery session for gastown started successfully
+2026/01/19 23:57:08 Heartbeat complete (#68)
+2026/01/20 00:00:08 Heartbeat starting (recovery-focused)
+2026/01/20 00:00:12 Deacon started successfully
+2026/01/20 00:00:12 Spawning Boot for triage...
+2026/01/20 00:00:12 Boot spawned successfully
+2026/01/20 00:00:12 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/20 00:00:12 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:01:12 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:01:12 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:02:13 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:02:13 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:02:16 Refinery session for beads_convex started successfully
+2026/01/20 00:02:16 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:02:19 Refinery session for gastown started successfully
+2026/01/20 00:02:22 Heartbeat complete (#69)
+2026/01/20 00:05:22 Heartbeat starting (recovery-focused)
+2026/01/20 00:06:22 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:06:22 Spawning Boot for triage...
+2026/01/20 00:06:22 Boot spawned successfully
+2026/01/20 00:06:22 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:07:23 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:07:23 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:08:23 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:08:23 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:08:26 Refinery session for beads_convex started successfully
+2026/01/20 00:08:26 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:08:29 Refinery session for gastown started successfully
+2026/01/20 00:08:33 Heartbeat complete (#70)
+2026/01/20 00:11:33 Heartbeat starting (recovery-focused)
+2026/01/20 00:12:33 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:12:33 Spawning Boot for triage...
+2026/01/20 00:12:33 Boot spawned successfully
+2026/01/20 00:12:33 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:13:33 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:13:33 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:14:34 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:14:34 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:14:37 Refinery session for beads_convex started successfully
+2026/01/20 00:14:37 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:14:40 Refinery session for gastown started successfully
+2026/01/20 00:14:43 Heartbeat complete (#71)
+2026/01/20 00:17:43 Heartbeat starting (recovery-focused)
+2026/01/20 00:17:46 Deacon started successfully
+2026/01/20 00:17:46 Spawning Boot for triage...
+2026/01/20 00:17:47 Boot spawned successfully
+2026/01/20 00:17:47 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/20 00:17:47 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:18:47 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:18:47 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:19:47 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:19:47 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:19:50 Refinery session for beads_convex started successfully
+2026/01/20 00:19:50 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:19:53 Refinery session for gastown started successfully
+2026/01/20 00:19:57 Heartbeat complete (#72)
+2026/01/20 00:20:10 convoy watcher: detected close of hq-mayor-role
+2026/01/20 00:20:10 convoy watcher: detected close of hq-mayor-role
+2026/01/20 00:20:10 convoy watcher: detected close of hq-deacon-role
+2026/01/20 00:20:10 convoy watcher: detected close of hq-deacon-role
+2026/01/20 00:20:10 convoy watcher: detected close of hq-dog-role
+2026/01/20 00:20:10 convoy watcher: detected close of hq-dog-role
+2026/01/20 00:20:10 convoy watcher: detected close of hq-witness-role
+2026/01/20 00:20:10 convoy watcher: detected close of hq-witness-role
+2026/01/20 00:20:10 convoy watcher: detected close of hq-refinery-role
+2026/01/20 00:20:10 convoy watcher: detected close of hq-refinery-role
+2026/01/20 00:20:10 convoy watcher: detected close of hq-crew-role
+2026/01/20 00:20:10 convoy watcher: detected close of hq-crew-role
+2026/01/20 00:20:10 convoy watcher: detected close of hq-polecat-role
+2026/01/20 00:20:10 convoy watcher: detected close of hq-polecat-role
+2026/01/20 00:22:57 Heartbeat starting (recovery-focused)
+2026/01/20 00:23:57 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:23:57 Spawning Boot for triage...
+2026/01/20 00:23:57 Boot spawned successfully
+2026/01/20 00:23:57 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:24:58 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:24:58 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:25:58 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:25:58 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:26:01 Refinery session for beads_convex started successfully
+2026/01/20 00:26:01 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:26:04 Refinery session for gastown started successfully
+2026/01/20 00:26:07 Heartbeat complete (#73)
+2026/01/20 00:29:07 Heartbeat starting (recovery-focused)
+2026/01/20 00:30:07 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:30:07 Spawning Boot for triage...
+2026/01/20 00:30:07 Boot spawned successfully
+2026/01/20 00:30:07 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:31:08 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:31:08 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:36:28 Loaded patrol config from /home/ubuntu/gt/mayor/daemon.json
+2026/01/20 00:36:28 Daemon starting (PID 984444)
+2026/01/20 00:36:28 Daemon running, recovery heartbeat interval 3m0s
+2026/01/20 00:36:28 Feed curator started
+2026/01/20 00:36:28 Convoy watcher started
+2026/01/20 00:36:28 Heartbeat starting (recovery-focused)
+2026/01/20 00:36:28 convoy watcher: detected close of hq-mayor-role
+2026/01/20 00:36:28 convoy watcher: detected close of hq-mayor-role
+2026/01/20 00:36:28 convoy watcher: detected close of hq-deacon-role
+2026/01/20 00:36:28 convoy watcher: detected close of hq-deacon-role
+2026/01/20 00:36:28 convoy watcher: detected close of hq-dog-role
+2026/01/20 00:36:28 convoy watcher: detected close of hq-dog-role
+2026/01/20 00:36:28 convoy watcher: detected close of hq-witness-role
+2026/01/20 00:36:28 convoy watcher: detected close of hq-witness-role
+2026/01/20 00:36:28 convoy watcher: detected close of hq-refinery-role
+2026/01/20 00:36:28 convoy watcher: detected close of hq-refinery-role
+2026/01/20 00:36:28 convoy watcher: detected close of hq-crew-role
+2026/01/20 00:36:28 convoy watcher: detected close of hq-crew-role
+2026/01/20 00:36:28 convoy watcher: detected close of hq-polecat-role
+2026/01/20 00:36:28 convoy watcher: detected close of hq-polecat-role
+2026/01/20 00:37:28 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:37:28 Spawning Boot for triage...
+2026/01/20 00:37:28 Boot spawned successfully
+2026/01/20 00:37:28 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:38:28 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:38:28 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:38:30 Loaded patrol config from /home/ubuntu/gt/mayor/daemon.json
+2026/01/20 00:38:30 Daemon starting (PID 990335)
+2026/01/20 00:38:30 Daemon running, recovery heartbeat interval 3m0s
+2026/01/20 00:38:30 Feed curator started
+2026/01/20 00:38:30 Convoy watcher started
+2026/01/20 00:38:30 Heartbeat starting (recovery-focused)
+2026/01/20 00:38:30 convoy watcher: detected close of hq-mayor-role
+2026/01/20 00:38:30 convoy watcher: detected close of hq-mayor-role
+2026/01/20 00:38:30 convoy watcher: detected close of hq-deacon-role
+2026/01/20 00:38:30 convoy watcher: detected close of hq-deacon-role
+2026/01/20 00:38:30 convoy watcher: detected close of hq-dog-role
+2026/01/20 00:38:30 convoy watcher: detected close of hq-dog-role
+2026/01/20 00:38:30 convoy watcher: detected close of hq-witness-role
+2026/01/20 00:38:30 convoy watcher: detected close of hq-witness-role
+2026/01/20 00:38:30 convoy watcher: detected close of hq-refinery-role
+2026/01/20 00:38:30 convoy watcher: detected close of hq-refinery-role
+2026/01/20 00:38:30 convoy watcher: detected close of hq-crew-role
+2026/01/20 00:38:30 convoy watcher: detected close of hq-crew-role
+2026/01/20 00:38:30 convoy watcher: detected close of hq-polecat-role
+2026/01/20 00:38:30 convoy watcher: detected close of hq-polecat-role
+2026/01/20 00:39:30 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:39:30 Spawning Boot for triage...
+2026/01/20 00:39:30 Boot spawned successfully
+2026/01/20 00:39:30 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:40:31 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:40:31 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:41:31 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:41:31 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:42:31 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 00:42:31 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:43:31 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 00:43:35 Heartbeat complete (#1)
+2026/01/20 00:43:35 Heartbeat starting (recovery-focused)
+2026/01/20 00:44:35 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:44:35 Spawning Boot for triage...
+2026/01/20 00:44:35 Boot spawned successfully
+2026/01/20 00:44:35 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:45:35 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:45:35 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:46:35 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:46:35 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:47:35 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 00:47:35 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:48:36 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 00:48:39 Heartbeat complete (#2)
+2026/01/20 00:51:39 Heartbeat starting (recovery-focused)
+2026/01/20 00:52:39 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:52:39 Spawning Boot for triage...
+2026/01/20 00:52:39 Boot spawned successfully
+2026/01/20 00:52:39 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:53:39 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:53:39 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:53:43 Witness session for gastown started successfully
+2026/01/20 00:53:43 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:54:43 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 00:54:43 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 00:55:43 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 00:55:47 Heartbeat complete (#3)
+2026/01/20 00:58:47 Heartbeat starting (recovery-focused)
+2026/01/20 00:58:50 Deacon started successfully
+2026/01/20 00:58:50 Spawning Boot for triage...
+2026/01/20 00:58:50 Boot spawned successfully
+2026/01/20 00:58:50 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/20 00:58:50 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 00:59:51 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 00:59:51 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:00:51 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:00:51 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:01:51 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:01:51 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:02:51 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:02:54 Heartbeat complete (#4)
+2026/01/20 01:05:54 Heartbeat starting (recovery-focused)
+2026/01/20 01:06:54 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:06:54 Spawning Boot for triage...
+2026/01/20 01:06:54 Boot spawned successfully
+2026/01/20 01:06:54 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:07:55 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:07:55 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:08:55 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:08:55 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:09:55 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:09:55 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:10:56 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:10:59 Heartbeat complete (#5)
+2026/01/20 01:13:59 Heartbeat starting (recovery-focused)
+2026/01/20 01:14:59 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:14:59 Spawning Boot for triage...
+2026/01/20 01:14:59 Boot spawned successfully
+2026/01/20 01:14:59 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:15:03 Witness session for beads_convex started successfully
+2026/01/20 01:15:03 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:15:08 Witness session for gastown started successfully
+2026/01/20 01:15:08 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:16:08 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:16:08 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:17:08 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:17:11 Heartbeat complete (#6)
+2026/01/20 01:20:11 Heartbeat starting (recovery-focused)
+2026/01/20 01:21:12 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:21:12 Spawning Boot for triage...
+2026/01/20 01:21:12 Boot spawned successfully
+2026/01/20 01:21:12 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:21:15 Witness session for beads_convex started successfully
+2026/01/20 01:21:15 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:22:16 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:22:16 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:23:16 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:23:16 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:24:16 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:24:19 Heartbeat complete (#7)
+2026/01/20 01:27:19 Heartbeat starting (recovery-focused)
+2026/01/20 01:28:19 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:28:19 Spawning Boot for triage...
+2026/01/20 01:28:19 Boot spawned successfully
+2026/01/20 01:28:19 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:29:20 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:29:20 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:30:20 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:30:20 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:31:20 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:31:20 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:32:20 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:32:23 Heartbeat complete (#8)
+2026/01/20 01:35:23 Heartbeat starting (recovery-focused)
+2026/01/20 01:36:23 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:36:23 Spawning Boot for triage...
+2026/01/20 01:36:23 Boot spawned successfully
+2026/01/20 01:36:23 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:37:24 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:37:24 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:38:24 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:38:24 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:39:24 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:39:24 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:40:24 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:40:28 Heartbeat complete (#9)
+2026/01/20 01:43:28 Heartbeat starting (recovery-focused)
+2026/01/20 01:44:28 Error starting Deacon: waiting for deacon to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:44:28 Spawning Boot for triage...
+2026/01/20 01:44:28 Boot spawned successfully
+2026/01/20 01:44:28 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:45:28 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:45:28 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:46:29 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:46:29 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:47:29 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:47:29 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:48:29 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:48:32 Heartbeat complete (#10)
+2026/01/20 01:51:32 Heartbeat starting (recovery-focused)
+2026/01/20 01:51:36 Deacon started successfully
+2026/01/20 01:51:36 Spawning Boot for triage...
+2026/01/20 01:51:36 Boot spawned successfully
+2026/01/20 01:51:36 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/20 01:51:36 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:52:36 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:52:36 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:53:37 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:53:37 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:54:37 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:54:37 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 01:55:37 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 01:55:40 Heartbeat complete (#11)
+2026/01/20 01:58:40 Heartbeat starting (recovery-focused)
+2026/01/20 01:58:43 Deacon started successfully
+2026/01/20 01:58:43 Spawning Boot for triage...
+2026/01/20 01:58:43 Boot spawned successfully
+2026/01/20 01:58:43 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/20 01:58:43 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 01:59:44 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 01:59:44 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:00:44 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 02:00:44 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:01:44 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:01:44 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:02:45 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:02:48 Heartbeat complete (#12)
+2026/01/20 02:05:48 Heartbeat starting (recovery-focused)
+2026/01/20 02:05:51 Deacon started successfully
+2026/01/20 02:05:51 Spawning Boot for triage...
+2026/01/20 02:05:51 Boot spawned successfully
+2026/01/20 02:05:51 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/20 02:05:51 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:06:52 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 02:06:52 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:07:52 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 02:07:52 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:08:52 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:08:52 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:09:52 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:09:55 Heartbeat complete (#13)
+2026/01/20 02:12:55 Heartbeat starting (recovery-focused)
+2026/01/20 02:12:59 Deacon started successfully
+2026/01/20 02:12:59 Spawning Boot for triage...
+2026/01/20 02:12:59 Boot spawned successfully
+2026/01/20 02:12:59 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/20 02:12:59 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:13:59 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 02:13:59 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:15:00 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 02:15:00 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:16:00 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:16:00 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:17:00 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:17:03 Heartbeat complete (#14)
+2026/01/20 02:20:03 Heartbeat starting (recovery-focused)
+2026/01/20 02:20:07 Deacon started successfully
+2026/01/20 02:20:07 Spawning Boot for triage...
+2026/01/20 02:20:07 Boot spawned successfully
+2026/01/20 02:20:07 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/20 02:20:07 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:21:08 Error starting witness for beads_convex: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 02:21:08 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:22:08 Error starting witness for gastown: waiting for witness to start: timeout waiting for command (still running excluded command)
+2026/01/20 02:22:08 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:23:08 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:23:08 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:24:08 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:24:12 Heartbeat complete (#15)
+2026/01/20 02:27:12 Heartbeat starting (recovery-focused)
+2026/01/20 02:27:16 Deacon started successfully
+2026/01/20 02:27:16 Spawning Boot for triage...
+2026/01/20 02:27:16 Boot spawned successfully
+2026/01/20 02:27:16 Deacon started recently (0s ago), skipping heartbeat check
+2026/01/20 02:27:16 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:27:23 Witness session for gastown started successfully
+2026/01/20 02:27:23 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:27:31 Witness session for beads_convex started successfully
+2026/01/20 02:27:31 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:28:32 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:28:32 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:29:32 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:29:35 Heartbeat complete (#16)
+2026/01/20 02:32:35 Heartbeat starting (recovery-focused)
+2026/01/20 02:32:35 Boot already running, skipping spawn
+2026/01/20 02:32:35 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:32:35 Witness for beads_convex already running, skipping spawn
+2026/01/20 02:32:35 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:32:35 Witness for gastown already running, skipping spawn
+2026/01/20 02:32:35 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:33:36 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:33:36 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:34:36 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:34:39 Heartbeat complete (#17)
+2026/01/20 02:37:39 Heartbeat starting (recovery-focused)
+2026/01/20 02:37:39 Boot already running, skipping spawn
+2026/01/20 02:37:39 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:37:39 Witness for beads_convex already running, skipping spawn
+2026/01/20 02:37:39 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:37:39 Witness for gastown already running, skipping spawn
+2026/01/20 02:37:39 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:38:40 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:38:40 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:39:40 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:39:43 Heartbeat complete (#18)
+2026/01/20 02:42:43 Heartbeat starting (recovery-focused)
+2026/01/20 02:42:43 Boot already running, skipping spawn
+2026/01/20 02:42:43 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:42:43 Witness for beads_convex already running, skipping spawn
+2026/01/20 02:42:43 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:42:43 Witness for gastown already running, skipping spawn
+2026/01/20 02:42:43 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:43:44 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:43:44 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:44:44 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:44:47 Heartbeat complete (#19)
+2026/01/20 02:47:47 Heartbeat starting (recovery-focused)
+2026/01/20 02:47:47 Boot already running, skipping spawn
+2026/01/20 02:47:47 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:47:47 Witness for beads_convex already running, skipping spawn
+2026/01/20 02:47:47 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:47:47 Witness for gastown already running, skipping spawn
+2026/01/20 02:47:47 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:49:25 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:49:25 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:50:29 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:50:32 Heartbeat complete (#20)
+2026/01/20 02:53:32 Heartbeat starting (recovery-focused)
+2026/01/20 02:53:32 Boot already running, skipping spawn
+2026/01/20 02:53:32 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:53:32 Witness for beads_convex already running, skipping spawn
+2026/01/20 02:53:32 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:53:32 Witness for gastown already running, skipping spawn
+2026/01/20 02:53:32 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:54:33 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:54:33 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:55:33 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:55:36 Heartbeat complete (#21)
+2026/01/20 02:58:36 Heartbeat starting (recovery-focused)
+2026/01/20 02:58:36 Boot already running, skipping spawn
+2026/01/20 02:58:36 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:58:36 Witness for beads_convex already running, skipping spawn
+2026/01/20 02:58:36 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 02:58:36 Witness for gastown already running, skipping spawn
+2026/01/20 02:58:36 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 02:59:37 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 02:59:37 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 03:00:37 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 03:00:40 Heartbeat complete (#22)
+2026/01/20 03:03:40 Heartbeat starting (recovery-focused)
+2026/01/20 03:03:40 Boot already running, skipping spawn
+2026/01/20 03:03:40 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 03:03:40 Witness for gastown already running, skipping spawn
+2026/01/20 03:03:40 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 03:03:40 Witness for beads_convex already running, skipping spawn
+2026/01/20 03:03:40 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 03:05:28 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 03:05:28 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 03:06:29 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 03:06:32 Heartbeat complete (#23)
+2026/01/20 03:09:32 Heartbeat starting (recovery-focused)
+2026/01/20 03:09:32 Boot already running, skipping spawn
+2026/01/20 03:09:32 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 03:09:32 Witness for beads_convex already running, skipping spawn
+2026/01/20 03:09:32 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 03:09:32 Witness for gastown already running, skipping spawn
+2026/01/20 03:09:32 Warning: no wisp config for gastown - parked state may have been lost
+2026/01/20 03:11:46 Error starting refinery for gastown: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 03:11:46 Warning: no wisp config for beads_convex - parked state may have been lost
+2026/01/20 03:12:52 Error starting refinery for beads_convex: waiting for refinery to start: timeout waiting for runtime prompt
+2026/01/20 03:12:53 convoy watcher: detected close of hq-mayor-role
+2026/01/20 03:12:53 convoy watcher: detected close of hq-mayor-role
+2026/01/20 03:12:53 convoy watcher: detected close of hq-deacon-role
+2026/01/20 03:12:53 convoy watcher: detected close of hq-deacon-role
+2026/01/20 03:12:53 convoy watcher: detected close of hq-dog-role
+2026/01/20 03:12:53 convoy watcher: detected close of hq-dog-role
+2026/01/20 03:12:53 convoy watcher: detected close of hq-witness-role
+2026/01/20 03:12:53 convoy watcher: detected close of hq-witness-role
+2026/01/20 03:12:53 convoy watcher: detected close of hq-refinery-role
+2026/01/20 03:12:53 convoy watcher: detected close of hq-refinery-role
+2026/01/20 03:12:53 convoy watcher: detected close of hq-crew-role
+2026/01/20 03:12:53 convoy watcher: detected close of hq-crew-role
+2026/01/20 03:12:53 convoy watcher: detected close of hq-polecat-role
+2026/01/20 03:12:53 convoy watcher: detected close of hq-polecat-role
+2026/01/20 03:12:57 Heartbeat complete (#24)
+2026/01/20 03:12:57 Received signal terminated, shutting down
+2026/01/20 03:12:57 Daemon shutting down
+2026/01/20 03:12:57 Feed curator stopped
+2026/01/20 03:12:57 convoy watcher: bd activity error: signal: killed, restarting in 5s
+2026/01/20 03:12:57 Convoy watcher stopped
+2026/01/20 03:12:57 Daemon stopped

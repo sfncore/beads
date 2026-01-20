@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "rigs": {
+    "beads": {
+      "git_url": "https://github.com/steveyegge/beads.git",
+      "added_at": "2026-01-20T06:46:14.723785436+11:00",
+      "beads": {
+        "repo": "",
+        "prefix": "bd"
+      }
+    },
+    "gastown": {
+      "git_url": "https://github.com/sfncore/gastown",
+      "added_at": "0001-01-01T00:00:00Z"
+    }
+  }
+}
