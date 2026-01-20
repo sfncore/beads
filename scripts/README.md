@@ -237,6 +237,138 @@ malicious due to heuristic detection. See `docs/ANTIVIRUS.md` for details.
 
 ---
 
+## generate-workspace.sh
+
+Generates a VS Code multi-root workspace that includes all Git worktrees as separate folders.
+
+### Usage
+
+```bash
+# Using beads CLI (recommended)
+bd workspace
+
+# Or run script directly
+./scripts/generate-workspace.sh
+```
+
+### What It Does
+
+1. **Discovers** all Git worktrees using `git worktree list --porcelain`
+2. **Validates** each worktree directory exists and is accessible
+3. **Generates** VS Code workspace JSON with:
+   - Each worktree as a named folder
+   - Branch names in folder titles for easy identification
+   - Optimized settings for Git workflow
+   - Recommended extensions (GitLens, Git Graph, etc.)
+4. **Opens** workspace in VS Code if `code` command is available
+
+### Output File
+
+Creates `beads-worktrees.code-workspace` in repository root:
+```json
+{
+    "folders": [
+        {
+            "name": "gt (main)",
+            "path": "."
+        },
+        {
+            "name": "beads-metadata (beads-metadata)", 
+            "path": ".git/beads-worktrees/beads-metadata"
+        }
+    ],
+    "settings": {
+        "git.enableSmartCommit": true,
+        "files.exclude": {
+            "**/.git": true
+        }
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-vscode.vscode-git-graph",
+            "eamodio.gitlens"
+        ]
+    }
+}
+```
+
+### Benefits
+
+- ✅ **No context switching** - All branches open simultaneously
+- ✅ **Independent debugging** - Each worktree has its own VS Code context
+- ✅ **Easy comparison** - Side-by-side file comparison across branches
+- ✅ **Optimized for beads** - Settings tuned for Git worktree workflow
+
+### Examples
+
+```bash
+# Generate workspace for current worktrees
+./scripts/generate-workspace.sh
+
+# Output shows found worktrees and opens VS Code
+[INFO] Discovering worktrees...
+[INFO] Found 3 worktree(s)
+[INFO]   ✓ gt -> main
+[INFO]   ✓ beads-metadata -> beads-metadata
+[INFO]   ✓ beads-sync -> beads-sync
+[SUCCESS] Workspace file created: /home/ubuntu/gt/beads-worktrees.code-workspace
+```
+
+---
+
+## watch-workspaces.sh
+
+Watches for worktree changes and auto-updates VS Code workspace.
+
+### Usage
+
+```bash
+# Start watching for worktree changes
+./scripts/watch-workspaces.sh
+
+# Ctrl+C to stop
+```
+
+### What It Does
+
+1. **Monitors** Git worktree state using hash comparison
+2. **Auto-updates** workspace when worktrees are added/removed
+3. **Runs** every 5 seconds (configurable via `WATCH_INTERVAL`)
+4. **Preserves** VS Code session by regenerating in-place
+
+### Features
+
+- **Real-time updates** - No manual regeneration needed
+- **Lightweight** - Uses hash comparison to minimize processing
+- **Auto-initialization** - Creates initial workspace if missing
+- **Cross-platform** - Works on macOS, Linux, and Windows
+
+### Configuration
+
+```bash
+# Custom watch interval (seconds)
+WATCH_INTERVAL=10 ./scripts/watch-workspaces.sh
+
+# Disable auto-opening when workspace updates
+AUTO_OPEN=false ./scripts/watch-workspaces.sh
+```
+
+### Workflow Integration
+
+Perfect for beads development:
+```bash
+# Terminal 1: Start watcher
+./scripts/watch-workspaces.sh
+
+# Terminal 2: Create new worktree
+bd worktree create feature/new-auth --branch feature/user-auth
+
+# Workspace auto-updates in ~5 seconds
+# VS Code shows new folder: "feature-new-auth (feature/user-auth)"
+```
+
+---
+
 ## Future Scripts
 
 Additional maintenance scripts may be added here as needed.
