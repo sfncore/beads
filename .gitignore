@@ -137,3 +137,8 @@ bd_test
 # Gas Town (added by gt)
 .logs/
 .beads/
+
+# bd worktree
+mayor-rig/
+# bd worktree
+feature-demo/
