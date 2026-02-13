@@ -1,0 +1,44 @@
+{
+    "folders": [
+        {
+            "name": "gt (main)",
+            "path": "."
+        },
+        {
+            "name": "feature-demo (feature/demo)",
+            "path": "feature-demo"
+        },
+        {
+            "name": "mayor-rig (mayor-rig)",
+            "path": "mayor-rig"
+        },
+        {
+            "name": "workspace_test (code-directory)",
+            "path": "workspace_test"
+        }
+    ],
+    "settings": {
+        "git.enableSmartCommit": true,
+        "git.autofetch": true,
+        "git.confirmSync": false,
+        "git.showInlineOpenFileAction": false,
+        "git.suggestSmartCommit": false,
+        "files.exclude": {
+            "**/.git": true,
+            "**/.DS_Store": true,
+            "**/Thumbs.db": true
+        },
+        "search.exclude": {
+            "**/.git": true,
+            "**/node_modules": true,
+            "**/bower_components": true
+        }
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-vscode.vscode-git-graph",
+            "eamodio.gitlens",
+            "donjayamanne.githistory"
+        ]
+    }
+}
