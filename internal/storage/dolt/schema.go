@@ -1,9 +1,11 @@
-//go:build cgo
-
 package dolt
 
+// currentSchemaVersion is bumped whenever the schema or migrations change.
+// initSchemaOnDB checks this against the stored version and skips re-initialization
+// when they match, avoiding ~20 DDL statements per bd invocation.
+const currentSchemaVersion = 3
+
 // schema defines the MySQL-compatible database schema for Dolt.
-// This mirrors the SQLite schema but uses MySQL syntax.
 const schema = `
 -- Issues table
 CREATE TABLE IF NOT EXISTS issues (
@@ -31,10 +33,6 @@ CREATE TABLE IF NOT EXISTS issues (
     compacted_at DATETIME,
     compacted_at_commit VARCHAR(64),
     original_size INT,
-    deleted_at DATETIME,
-    deleted_by VARCHAR(255) DEFAULT '',
-    delete_reason TEXT DEFAULT '',
-    original_type VARCHAR(32) DEFAULT '',
     -- Messaging fields
     sender VARCHAR(255) DEFAULT '',
     ephemeral TINYINT(1) DEFAULT 0,
@@ -91,7 +89,6 @@ CREATE TABLE IF NOT EXISTS issues (
 
 -- Dependencies table (edge schema)
 -- Note: No FK on depends_on_id to allow external references (external:<rig>:<id>).
--- See SQLite migration 025_remove_depends_on_fk.go for design context.
 CREATE TABLE IF NOT EXISTS dependencies (
     issue_id VARCHAR(255) NOT NULL,
     depends_on_id VARCHAR(255) NOT NULL,
@@ -155,15 +152,6 @@ CREATE TABLE IF NOT EXISTS metadata (
     ` + "`key`" + ` VARCHAR(255) PRIMARY KEY,
     value TEXT NOT NULL
 );
-
--- Export hashes table
-CREATE TABLE IF NOT EXISTS export_hashes (
-    issue_id VARCHAR(255) PRIMARY KEY,
-    content_hash VARCHAR(64) NOT NULL,
-    exported_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_export_issue FOREIGN KEY (issue_id) REFERENCES issues(id) ON DELETE CASCADE
-);
-
 -- Child counters table
 CREATE TABLE IF NOT EXISTS child_counters (
     parent_id VARCHAR(255) PRIMARY KEY,
@@ -264,11 +252,12 @@ INSERT IGNORE INTO config (` + "`key`" + `, value) VALUES
     ('compact_model', 'claude-haiku-4-5-20251001'),
     ('compact_batch_size', '50'),
     ('compact_parallel_workers', '5'),
-    ('auto_compact_enabled', 'false');
+    ('auto_compact_enabled', 'false'),
+    ('types.custom', 'molecule,gate,convoy,merge-request,slot,agent,role,rig,message');
 `
 
 // readyIssuesView is a MySQL-compatible view for ready work
-// Note: Dolt supports recursive CTEs like SQLite.
+// Note: Dolt supports recursive CTEs.
 // Uses LEFT JOIN instead of NOT EXISTS to avoid Dolt mergeJoinIter panic.
 // See: https://github.com/dolthub/go-mysql-server/issues/3413
 const readyIssuesView = `
@@ -299,7 +288,16 @@ FROM issues i
 LEFT JOIN blocked_transitively bt ON bt.issue_id = i.id
 WHERE i.status = 'open'
   AND (i.ephemeral = 0 OR i.ephemeral IS NULL)
-  AND bt.issue_id IS NULL;
+  AND bt.issue_id IS NULL
+  AND (i.defer_until IS NULL OR i.defer_until <= NOW())
+  AND NOT EXISTS (
+    SELECT 1 FROM dependencies d_parent
+    JOIN issues parent ON parent.id = d_parent.depends_on_id
+    WHERE d_parent.issue_id = i.id
+      AND d_parent.type = 'parent-child'
+      AND parent.defer_until IS NOT NULL
+      AND parent.defer_until > NOW()
+  );
 `
 
 // blockedIssuesView is a MySQL-compatible view for blocked issues.

@@ -1190,10 +1190,13 @@ func TestCheckRedirectNotTracked_FileExistsNotTracked(t *testing.T) {
 		}
 	}()
 
-	// Initialize git repo
-	gitInit := exec.Command("git", "init")
-	if err := gitInit.Run(); err != nil {
-		t.Skipf("git init failed: %v", err)
+	// Initialize git repo from cached template
+	initGitTemplate()
+	if gitTemplateErr != nil {
+		t.Fatalf("git template init failed: %v", gitTemplateErr)
+	}
+	if err := copyGitDir(gitTemplateDir, tmpDir); err != nil {
+		t.Fatalf("failed to copy git template: %v", err)
 	}
 
 	// Create .beads directory with redirect file
@@ -1237,15 +1240,14 @@ func TestCheckRedirectNotTracked_FileTracked(t *testing.T) {
 		}
 	}()
 
-	// Initialize git repo
-	gitInit := exec.Command("git", "init")
-	if err := gitInit.Run(); err != nil {
-		t.Skipf("git init failed: %v", err)
+	// Initialize git repo from cached template
+	initGitTemplate()
+	if gitTemplateErr != nil {
+		t.Fatalf("git template init failed: %v", gitTemplateErr)
 	}
-
-	// Configure git user for commits
-	exec.Command("git", "config", "user.email", "test@test.com").Run()
-	exec.Command("git", "config", "user.name", "Test").Run()
+	if err := copyGitDir(gitTemplateDir, tmpDir); err != nil {
+		t.Fatalf("failed to copy git template: %v", err)
+	}
 
 	// Create .beads directory with redirect file
 	beadsDir := filepath.Join(tmpDir, ".beads")
@@ -1297,15 +1299,14 @@ func TestFixRedirectTracking(t *testing.T) {
 		}
 	}()
 
-	// Initialize git repo
-	gitInit := exec.Command("git", "init")
-	if err := gitInit.Run(); err != nil {
-		t.Skipf("git init failed: %v", err)
+	// Initialize git repo from cached template
+	initGitTemplate()
+	if gitTemplateErr != nil {
+		t.Fatalf("git template init failed: %v", gitTemplateErr)
 	}
-
-	// Configure git user for commits
-	exec.Command("git", "config", "user.email", "test@test.com").Run()
-	exec.Command("git", "config", "user.name", "Test").Run()
+	if err := copyGitDir(gitTemplateDir, tmpDir); err != nil {
+		t.Fatalf("failed to copy git template: %v", err)
+	}
 
 	// Create .beads directory with redirect file
 	beadsDir := filepath.Join(tmpDir, ".beads")
@@ -1348,6 +1349,51 @@ func TestFixRedirectTracking(t *testing.T) {
 	}
 }
 
+func TestCheckRedirectTargetValid_AbsolutePath(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	targetRoot := filepath.Join(tmpDir, "target")
+	targetBeads := filepath.Join(targetRoot, ".beads")
+	if err := os.MkdirAll(targetBeads, 0750); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(targetBeads, "metadata.json"), []byte(`{"backend":"dolt"}`), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	workRoot := filepath.Join(tmpDir, "work")
+	workBeads := filepath.Join(workRoot, ".beads")
+	if err := os.MkdirAll(workBeads, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	redirectPath := filepath.Join(workBeads, "redirect")
+	if err := os.WriteFile(redirectPath, []byte(targetBeads+"\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	oldDir, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chdir(workRoot); err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		if err := os.Chdir(oldDir); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	check := CheckRedirectTargetValid()
+	if check.Status != StatusOK {
+		t.Fatalf("expected status %s, got %s (detail: %s)", StatusOK, check.Status, check.Detail)
+	}
+	if !strings.Contains(check.Message, targetBeads) {
+		t.Errorf("expected message to include target path, got: %s", check.Message)
+	}
+}
+
 func TestGitignoreTemplate_ContainsRedirect(t *testing.T) {
 	// Verify the template contains the redirect pattern
 	if !strings.Contains(GitignoreTemplate, "redirect") {
@@ -1366,6 +1412,15 @@ func TestRequiredPatterns_ContainsRedirect(t *testing.T) {
 	}
 	if !found {
 		t.Error("requiredPatterns should include 'redirect'")
+	}
+}
+
+// TestGitignoreTemplate_ContainsLegacyDaemonPatterns verifies that legacy daemon
+// file patterns are still gitignored to prevent old files from being committed.
+// GH#1142, GH#919
+func TestGitignoreTemplate_ContainsLegacyDaemonPatterns(t *testing.T) {
+	if !strings.Contains(GitignoreTemplate, "daemon-*.log.gz") {
+		t.Error("GitignoreTemplate should contain 'daemon-*.log.gz' pattern for legacy daemon log files")
 	}
 }
 
@@ -1463,10 +1518,13 @@ func TestCheckLastTouchedNotTracked_FileExistsNotTracked(t *testing.T) {
 		}
 	}()
 
-	// Initialize git repo
-	gitInit := exec.Command("git", "init")
-	if err := gitInit.Run(); err != nil {
-		t.Skipf("git init failed: %v", err)
+	// Initialize git repo from cached template
+	initGitTemplate()
+	if gitTemplateErr != nil {
+		t.Fatalf("git template init failed: %v", gitTemplateErr)
+	}
+	if err := copyGitDir(gitTemplateDir, tmpDir); err != nil {
+		t.Fatalf("failed to copy git template: %v", err)
 	}
 
 	// Create .beads directory with last-touched file
@@ -1510,15 +1568,14 @@ func TestCheckLastTouchedNotTracked_FileTracked(t *testing.T) {
 		}
 	}()
 
-	// Initialize git repo
-	gitInit := exec.Command("git", "init")
-	if err := gitInit.Run(); err != nil {
-		t.Skipf("git init failed: %v", err)
+	// Initialize git repo from cached template
+	initGitTemplate()
+	if gitTemplateErr != nil {
+		t.Fatalf("git template init failed: %v", gitTemplateErr)
 	}
-
-	// Configure git user for commits
-	exec.Command("git", "config", "user.email", "test@test.com").Run()
-	exec.Command("git", "config", "user.name", "Test").Run()
+	if err := copyGitDir(gitTemplateDir, tmpDir); err != nil {
+		t.Fatalf("failed to copy git template: %v", err)
+	}
 
 	// Create .beads directory with last-touched file
 	beadsDir := filepath.Join(tmpDir, ".beads")
@@ -1570,15 +1627,14 @@ func TestFixLastTouchedTracking(t *testing.T) {
 		}
 	}()
 
-	// Initialize git repo
-	gitInit := exec.Command("git", "init")
-	if err := gitInit.Run(); err != nil {
-		t.Skipf("git init failed: %v", err)
+	// Initialize git repo from cached template
+	initGitTemplate()
+	if gitTemplateErr != nil {
+		t.Fatalf("git template init failed: %v", gitTemplateErr)
 	}
-
-	// Configure git user for commits
-	exec.Command("git", "config", "user.email", "test@test.com").Run()
-	exec.Command("git", "config", "user.name", "Test").Run()
+	if err := copyGitDir(gitTemplateDir, tmpDir); err != nil {
+		t.Fatalf("failed to copy git template: %v", err)
+	}
 
 	// Create .beads directory with last-touched file
 	beadsDir := filepath.Join(tmpDir, ".beads")
@@ -1644,7 +1700,7 @@ func TestRequiredPatterns_ContainsLastTouched(t *testing.T) {
 
 // TestGitignoreTemplate_ContainsJSONLLock verifies that the .beads/.gitignore template
 // includes .jsonl.lock to prevent the JSONL coordination lock file from being tracked.
-// The lock file is a runtime artifact in the same category as daemon.lock and .sync.lock.
+// The lock file is a runtime artifact in the same category as .sync.lock.
 func TestGitignoreTemplate_ContainsJSONLLock(t *testing.T) {
 	if !strings.Contains(GitignoreTemplate, ".jsonl.lock") {
 		t.Error("GitignoreTemplate should contain '.jsonl.lock' pattern")
@@ -1663,5 +1719,51 @@ func TestRequiredPatterns_ContainsJSONLLock(t *testing.T) {
 	}
 	if !found {
 		t.Error("requiredPatterns should include '.jsonl.lock'")
+	}
+}
+
+// TestGitignoreTemplate_ContainsDolt verifies that the .beads/.gitignore template
+// includes dolt/ to prevent the Dolt database directory from being committed.
+func TestGitignoreTemplate_ContainsDolt(t *testing.T) {
+	if !strings.Contains(GitignoreTemplate, "dolt/") {
+		t.Error("GitignoreTemplate should contain 'dolt/' pattern")
+	}
+}
+
+// TestGitignoreTemplate_ContainsDoltAccessLock verifies that the .beads/.gitignore template
+// includes dolt-access.lock to prevent the Dolt advisory lock file from being committed.
+func TestGitignoreTemplate_ContainsDoltAccessLock(t *testing.T) {
+	if !strings.Contains(GitignoreTemplate, "dolt-access.lock") {
+		t.Error("GitignoreTemplate should contain 'dolt-access.lock' pattern")
+	}
+}
+
+// TestRequiredPatterns_ContainsDolt verifies that bd doctor validates
+// the presence of the dolt/ pattern in .beads/.gitignore.
+func TestRequiredPatterns_ContainsDolt(t *testing.T) {
+	found := false
+	for _, pattern := range requiredPatterns {
+		if pattern == "dolt/" {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Error("requiredPatterns should include 'dolt/'")
+	}
+}
+
+// TestRequiredPatterns_ContainsDoltAccessLock verifies that bd doctor validates
+// the presence of the dolt-access.lock pattern in .beads/.gitignore.
+func TestRequiredPatterns_ContainsDoltAccessLock(t *testing.T) {
+	found := false
+	for _, pattern := range requiredPatterns {
+		if pattern == "dolt-access.lock" {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Error("requiredPatterns should include 'dolt-access.lock'")
 	}
 }

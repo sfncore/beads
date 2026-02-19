@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/steveyegge/beads/internal/routing"
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/storage/factory"
+	"github.com/steveyegge/beads/internal/storage/dolt"
 	"github.com/steveyegge/beads/internal/types"
 	"github.com/steveyegge/beads/internal/utils"
 )
@@ -24,7 +24,7 @@ func beadsDirOverride() bool {
 // RoutedResult contains the result of a routed issue lookup
 type RoutedResult struct {
 	Issue      *types.Issue
-	Store      storage.Storage // The store that contains this issue (may be routed)
+	Store      *dolt.DoltStore // The store that contains this issue (may be routed)
 	Routed     bool            // true if the issue was found via routing
 	ResolvedID string          // The resolved (full) issue ID
 	closeFn    func()          // Function to close routed storage (if any)
@@ -44,7 +44,7 @@ func (r *RoutedResult) Close() {
 // The resolution happens in the correct store based on the ID prefix.
 // Returns a RoutedResult containing the issue, resolved ID, and the store to use.
 // The caller MUST call result.Close() when done to release any routed storage.
-func resolveAndGetIssueWithRouting(ctx context.Context, localStore storage.Storage, id string) (*RoutedResult, error) {
+func resolveAndGetIssueWithRouting(ctx context.Context, localStore *dolt.DoltStore, id string) (*RoutedResult, error) {
 	// Step 1: Check if routing is needed based on ID prefix
 	if dbPath == "" {
 		// No routing without a database path - use local store
@@ -57,8 +57,8 @@ func resolveAndGetIssueWithRouting(ctx context.Context, localStore storage.Stora
 	}
 
 	beadsDir := filepath.Dir(dbPath)
-	// Use factory.NewFromConfig as the storage opener to respect backend configuration
-	routedStorage, err := routing.GetRoutedStorageWithOpener(ctx, id, beadsDir, factory.NewFromConfig)
+	// Use dolt.NewFromConfig as the storage opener to respect backend configuration
+	routedStorage, err := routing.GetRoutedStorageWithOpener(ctx, id, beadsDir, dolt.NewFromConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +82,7 @@ func resolveAndGetIssueWithRouting(ctx context.Context, localStore storage.Stora
 }
 
 // resolveAndGetFromStore resolves a partial ID and gets the issue from a specific store.
-func resolveAndGetFromStore(ctx context.Context, s storage.Storage, id string, routed bool) (*RoutedResult, error) {
+func resolveAndGetFromStore(ctx context.Context, s *dolt.DoltStore, id string, routed bool) (*RoutedResult, error) {
 	// First, resolve the partial ID
 	resolvedID, err := utils.ResolvePartialID(ctx, s, id)
 	if err != nil {
@@ -109,7 +109,7 @@ func resolveAndGetFromStore(ctx context.Context, s storage.Storage, id string, r
 // openStoreForRig opens a read-only storage connection to a different rig's database.
 // The rigOrPrefix parameter accepts any format: "beads", "bd-", "bd", etc.
 // Returns the opened storage (caller must close) or an error.
-func openStoreForRig(ctx context.Context, rigOrPrefix string) (storage.Storage, error) {
+func openStoreForRig(ctx context.Context, rigOrPrefix string) (*dolt.DoltStore, error) {
 	townBeadsDir, err := findTownBeadsDir()
 	if err != nil {
 		return nil, fmt.Errorf("cannot resolve rig: %v", err)
@@ -120,7 +120,7 @@ func openStoreForRig(ctx context.Context, rigOrPrefix string) (storage.Storage, 
 		return nil, err
 	}
 
-	targetStore, err := factory.NewFromConfigWithOptions(ctx, targetBeadsDir, factory.Options{ReadOnly: true})
+	targetStore, err := dolt.NewFromConfigWithOptions(ctx, targetBeadsDir, &dolt.Config{ReadOnly: true})
 	if err != nil {
 		return nil, fmt.Errorf("failed to open rig %q database: %v", rigOrPrefix, err)
 	}
@@ -134,7 +134,7 @@ func openStoreForRig(ctx context.Context, rigOrPrefix string) (storage.Storage, 
 //
 // Returns a RoutedResult containing the issue and the store to use for related queries.
 // The caller MUST call result.Close() when done to release any routed storage.
-func getIssueWithRouting(ctx context.Context, localStore storage.Storage, id string) (*RoutedResult, error) {
+func getIssueWithRouting(ctx context.Context, localStore *dolt.DoltStore, id string) (*RoutedResult, error) {
 	// Step 1: Try local store first (current behavior)
 	issue, err := localStore.GetIssue(ctx, id)
 	if err == nil && issue != nil {
@@ -158,8 +158,8 @@ func getIssueWithRouting(ctx context.Context, localStore storage.Storage, id str
 	}
 
 	beadsDir := filepath.Dir(dbPath)
-	// Use GetRoutedStorageWithOpener with factory to respect backend configuration (bd-m2jr)
-	routedStorage, routeErr := routing.GetRoutedStorageWithOpener(ctx, id, beadsDir, factory.NewFromConfig)
+	// Use GetRoutedStorageWithOpener with dolt to respect backend configuration (bd-m2jr)
+	routedStorage, routeErr := routing.GetRoutedStorageWithOpener(ctx, id, beadsDir, dolt.NewFromConfig)
 	if routeErr != nil || routedStorage == nil {
 		// No routing found or error - return original result
 		return &RoutedResult{
@@ -202,8 +202,8 @@ func getRoutedStoreForID(ctx context.Context, id string) (*routing.RoutedStorage
 	}
 
 	beadsDir := filepath.Dir(dbPath)
-	// Use GetRoutedStorageWithOpener with factory to respect backend configuration (bd-m2jr)
-	return routing.GetRoutedStorageWithOpener(ctx, id, beadsDir, factory.NewFromConfig)
+	// Use GetRoutedStorageWithOpener with dolt to respect backend configuration (bd-m2jr)
+	return routing.GetRoutedStorageWithOpener(ctx, id, beadsDir, dolt.NewFromConfig)
 }
 
 // needsRouting checks if an ID would be routed to a different beads directory.
@@ -221,4 +221,106 @@ func needsRouting(id string) bool {
 
 	// Check if the routed directory is different from the current one
 	return targetDir != beadsDir
+}
+
+// resolveExternalDepsViaRouting resolves external dependency references by following
+// prefix routes to locate and query the target database.
+//
+// GetDependenciesWithMetadata uses a JOIN between dependencies and issues tables,
+// so external refs (e.g., "external:gastown:gt-42zaq") that don't exist in the local
+// issues table are silently dropped. This function fills in those gaps by:
+// 1. Getting raw dependency records
+// 2. Filtering for external refs
+// 3. Extracting the issue ID from each ref
+// 4. Using routing to look up the issue in the target database
+//
+// Returns a slice of IssueWithDependencyMetadata for resolved external deps.
+func resolveExternalDepsViaRouting(ctx context.Context, issueStore *dolt.DoltStore, issueID string) ([]*types.IssueWithDependencyMetadata, error) {
+	// Get raw dependency records to find external refs
+	deps, err := issueStore.GetDependencyRecords(ctx, issueID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Filter for external refs
+	var externalDeps []*types.Dependency
+	for _, dep := range deps {
+		if strings.HasPrefix(dep.DependsOnID, "external:") {
+			externalDeps = append(externalDeps, dep)
+		}
+	}
+
+	if len(externalDeps) == 0 {
+		return nil, nil
+	}
+
+	var results []*types.IssueWithDependencyMetadata
+
+	for _, dep := range externalDeps {
+		// Parse external:project:id — the third part is the actual issue ID
+		parts := strings.SplitN(dep.DependsOnID, ":", 3)
+		if len(parts) != 3 || parts[2] == "" {
+			continue
+		}
+		targetID := parts[2]
+
+		// Use routing to resolve the target issue
+		result, routeErr := resolveAndGetIssueWithRouting(ctx, store, targetID)
+		if routeErr != nil || result == nil || result.Issue == nil {
+			// Can't resolve — create a placeholder with the external ref as ID
+			results = append(results, &types.IssueWithDependencyMetadata{
+				Issue: types.Issue{
+					ID:     dep.DependsOnID,
+					Title:  "(unresolved external dependency)",
+					Status: types.StatusOpen,
+				},
+				DependencyType: dep.Type,
+			})
+			if result != nil {
+				result.Close()
+			}
+			continue
+		}
+
+		results = append(results, &types.IssueWithDependencyMetadata{
+			Issue:          *result.Issue,
+			DependencyType: dep.Type,
+		})
+		result.Close()
+	}
+
+	return results, nil
+}
+
+// resolveBlockedByRefs takes a list of blocker IDs (which may include external refs
+// like "external:gastown:gt-42zaq") and resolves them to human-readable strings.
+// Local IDs pass through unchanged. External refs are resolved via routing to show
+// the actual issue ID and title from the target database.
+func resolveBlockedByRefs(ctx context.Context, refs []string) []string {
+	resolved := make([]string, 0, len(refs))
+	for _, ref := range refs {
+		if !strings.HasPrefix(ref, "external:") {
+			resolved = append(resolved, ref)
+			continue
+		}
+		// Parse external:project:id
+		parts := strings.SplitN(ref, ":", 3)
+		if len(parts) != 3 || parts[2] == "" {
+			resolved = append(resolved, ref)
+			continue
+		}
+		targetID := parts[2]
+		result, err := resolveAndGetIssueWithRouting(ctx, store, targetID)
+		if err != nil || result == nil || result.Issue == nil {
+			// Can't resolve — show the raw issue ID from the ref
+			resolved = append(resolved, targetID)
+			if result != nil {
+				result.Close()
+			}
+			continue
+		}
+		resolved = append(resolved, fmt.Sprintf("%s: %s", result.Issue.ID, result.Issue.Title))
+		result.Close()
+	}
+	return resolved
 }

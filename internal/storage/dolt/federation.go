@@ -1,5 +1,3 @@
-//go:build cgo
-
 package dolt
 
 import (
@@ -170,7 +168,7 @@ func (s *DoltStore) Sync(ctx context.Context, peer string, strategy string) (*Sy
 	result.Fetched = true
 
 	// Step 2: Get status before merge
-	beforeCommit, _ := s.GetCurrentCommit(ctx)
+	beforeCommit, _ := s.GetCurrentCommit(ctx) // Best effort: empty commit hash means diff won't be logged
 
 	// Step 3: Merge peer's branch
 	remoteBranch := fmt.Sprintf("%s/%s", peer, s.branch)
@@ -208,7 +206,7 @@ func (s *DoltStore) Sync(ctx context.Context, peer string, strategy string) (*Sy
 	result.Merged = true
 
 	// Count pulled commits
-	afterCommit, _ := s.GetCurrentCommit(ctx)
+	afterCommit, _ := s.GetCurrentCommit(ctx) // Best effort: empty commit hash means diff won't be logged
 	if beforeCommit != afterCommit {
 		result.PulledCommits = 1 // Simplified - could count actual commits
 	}
@@ -222,7 +220,7 @@ func (s *DoltStore) Sync(ctx context.Context, peer string, strategy string) (*Sy
 	}
 
 	// Record last sync time
-	_ = s.setLastSyncTime(ctx, peer)
+	_ = s.setLastSyncTime(ctx, peer) // Best effort: sync timestamp is advisory for scheduling
 
 	result.EndTime = time.Now()
 	return result, nil

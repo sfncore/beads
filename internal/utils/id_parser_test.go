@@ -1,12 +1,30 @@
+//go:build cgo
+
 package utils
 
 import (
 	"context"
+	"path/filepath"
 	"testing"
 
-	"github.com/steveyegge/beads/internal/storage/memory"
+	"github.com/steveyegge/beads/internal/storage/dolt"
 	"github.com/steveyegge/beads/internal/types"
 )
+
+func newTestStore(t *testing.T) *dolt.DoltStore {
+	t.Helper()
+	ctx := context.Background()
+	store, err := dolt.New(ctx, &dolt.Config{Path: filepath.Join(t.TempDir(), "test.db")})
+	if err != nil {
+		t.Fatalf("Failed to create dolt store: %v", err)
+	}
+	if err := store.SetConfig(ctx, "issue_prefix", "bd"); err != nil {
+		store.Close()
+		t.Fatalf("Failed to set issue_prefix: %v", err)
+	}
+	t.Cleanup(func() { store.Close() })
+	return store
+}
 
 func TestParseIssueID(t *testing.T) {
 	tests := []struct {
@@ -65,7 +83,7 @@ func TestParseIssueID(t *testing.T) {
 
 func TestResolvePartialID(t *testing.T) {
 	ctx := context.Background()
-	store := memory.New("")
+	store := newTestStore(t)
 
 	// Create test issues with sequential IDs (current implementation)
 	// When hash IDs (bd-165) are implemented, these can be hash-based
@@ -206,7 +224,7 @@ func TestResolvePartialID(t *testing.T) {
 
 func TestResolvePartialIDs(t *testing.T) {
 	ctx := context.Background()
-	store := memory.New("")
+	store := newTestStore(t)
 
 	// Create test issues
 	issue1 := &types.Issue{
@@ -290,7 +308,7 @@ func TestResolvePartialIDs(t *testing.T) {
 
 func TestResolvePartialID_NoConfig(t *testing.T) {
 	ctx := context.Background()
-	store := memory.New("")
+	store := newTestStore(t)
 
 	// Create test issue without setting config (test default prefix)
 	issue1 := &types.Issue{
@@ -559,7 +577,7 @@ func findSubstring(s, substr string) bool {
 // a single database.
 func TestResolvePartialID_CrossPrefix(t *testing.T) {
 	ctx := context.Background()
-	store := memory.New("")
+	store := newTestStore(t)
 
 	// Create issues with different prefixes (simulating multi-repo hydration)
 	hqIssue := &types.Issue{
@@ -649,6 +667,51 @@ func TestResolvePartialID_CrossPrefix(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+// TestResolvePartialID_TitleFalsePositive verifies that when the search query
+// matches an issue's title but NOT its ID, the in-memory filter correctly
+// rejects it. This is important because the optimization passes hashPart as
+// the search query (matching title/description/ID) instead of loading all issues.
+func TestResolvePartialID_TitleFalsePositive(t *testing.T) {
+	ctx := context.Background()
+	store := newTestStore(t)
+
+	// Issue whose title contains "abc12" but ID does NOT
+	decoy := &types.Issue{
+		ID:        "bd-xyz99",
+		Title:     "See abc12 for reference",
+		Status:    types.StatusOpen,
+		Priority:  1,
+		IssueType: types.TypeTask,
+	}
+	// Issue whose ID actually contains "abc12"
+	target := &types.Issue{
+		ID:        "bd-abc12",
+		Title:     "Real issue",
+		Status:    types.StatusOpen,
+		Priority:  1,
+		IssueType: types.TypeTask,
+	}
+
+	if err := store.CreateIssue(ctx, decoy, "test"); err != nil {
+		t.Fatal(err)
+	}
+	if err := store.CreateIssue(ctx, target, "test"); err != nil {
+		t.Fatal(err)
+	}
+	if err := store.SetConfig(ctx, "issue_prefix", "bd-"); err != nil {
+		t.Fatal(err)
+	}
+
+	// Search for "abc12" — should find bd-abc12, NOT bd-xyz99
+	result, err := ResolvePartialID(ctx, store, "abc12")
+	if err != nil {
+		t.Fatalf("ResolvePartialID(%q) unexpected error: %v", "abc12", err)
+	}
+	if result != "bd-abc12" {
+		t.Errorf("ResolvePartialID(%q) = %q; want %q (title match should be rejected)", "abc12", result, "bd-abc12")
 	}
 }
 

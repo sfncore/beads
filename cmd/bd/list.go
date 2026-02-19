@@ -15,9 +15,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/cobra"
 	"github.com/steveyegge/beads/internal/config"
-	"github.com/steveyegge/beads/internal/configfile"
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/storage/factory"
+	"github.com/steveyegge/beads/internal/storage/dolt"
 	"github.com/steveyegge/beads/internal/types"
 	"github.com/steveyegge/beads/internal/ui"
 	"github.com/steveyegge/beads/internal/utils"
@@ -25,29 +23,29 @@ import (
 )
 
 // storageExecutor handles operations that need to work with both direct store and daemon mode
-type storageExecutor func(store storage.Storage) error
+type storageExecutor func(store *dolt.DoltStore) error
 
 // withStorage executes an operation with either the direct store or a read-only store in daemon mode
-func withStorage(ctx context.Context, store storage.Storage, dbPath string, lockTimeout time.Duration, fn storageExecutor) error {
+func withStorage(ctx context.Context, store *dolt.DoltStore, dbPath string, lockTimeout time.Duration, fn storageExecutor) error {
 	if store != nil {
 		return fn(store)
 	} else if dbPath != "" {
 		// Daemon mode: open read-only connection
-		roStore, err := factory.NewWithOptions(ctx, configfile.BackendDolt, dbPath, factory.Options{ReadOnly: true, LockTimeout: lockTimeout})
+		roStore, err := dolt.New(ctx, &dolt.Config{Path: dbPath, ReadOnly: true, OpenTimeout: lockTimeout})
 		if err != nil {
 			return err
 		}
-		defer func() { _ = roStore.Close() }()
+		defer func() { _ = roStore.Close() }() // Best effort cleanup
 		return fn(roStore)
 	}
 	return fmt.Errorf("no storage available")
 }
 
 // getHierarchicalChildren handles the --tree --parent combination logic
-func getHierarchicalChildren(ctx context.Context, store storage.Storage, dbPath string, lockTimeout time.Duration, parentID string) ([]*types.Issue, error) {
+func getHierarchicalChildren(ctx context.Context, store *dolt.DoltStore, dbPath string, lockTimeout time.Duration, parentID string) ([]*types.Issue, error) {
 	// First verify that the parent issue exists
 	var parentIssue *types.Issue
-	err := withStorage(ctx, store, dbPath, lockTimeout, func(s storage.Storage) error {
+	err := withStorage(ctx, store, dbPath, lockTimeout, func(s *dolt.DoltStore) error {
 		var err error
 		parentIssue, err = s.GetIssue(ctx, parentID)
 		return err
@@ -82,14 +80,14 @@ func getHierarchicalChildren(ctx context.Context, store storage.Storage, dbPath 
 }
 
 // findAllDescendants recursively finds all descendants using parent filtering
-func findAllDescendants(ctx context.Context, store storage.Storage, dbPath string, lockTimeout time.Duration, parentID string, result map[string]*types.Issue, currentDepth, maxDepth int) error {
+func findAllDescendants(ctx context.Context, store *dolt.DoltStore, dbPath string, lockTimeout time.Duration, parentID string, result map[string]*types.Issue, currentDepth, maxDepth int) error {
 	if currentDepth >= maxDepth {
 		return nil // Prevent infinite recursion
 	}
 
 	// Get direct children using the same filter logic as regular --parent
 	var children []*types.Issue
-	err := withStorage(ctx, store, dbPath, lockTimeout, func(s storage.Storage) error {
+	err := withStorage(ctx, store, dbPath, lockTimeout, func(s *dolt.DoltStore) error {
 		filter := types.IssueFilter{
 			ParentID: &parentID,
 		}
@@ -117,7 +115,7 @@ func findAllDescendants(ctx context.Context, store storage.Storage, dbPath strin
 }
 
 // watchIssues starts watching for changes and re-displays (GH#654)
-func watchIssues(ctx context.Context, store storage.Storage, filter types.IssueFilter, sortBy string, reverse bool) {
+func watchIssues(ctx context.Context, store *dolt.DoltStore, filter types.IssueFilter, sortBy string, reverse bool) {
 	// Find .beads directory
 	beadsDir := ".beads"
 	if _, err := os.Stat(beadsDir); os.IsNotExist(err) {
@@ -130,7 +128,7 @@ func watchIssues(ctx context.Context, store storage.Storage, filter types.IssueF
 		fmt.Fprintf(os.Stderr, "Error creating watcher: %v\n", err)
 		return
 	}
-	defer func() { _ = watcher.Close() }()
+	defer func() { _ = watcher.Close() }() // Best effort cleanup
 
 	// Watch the .beads directory
 	if err := watcher.Add(beadsDir); err != nil {
@@ -139,7 +137,11 @@ func watchIssues(ctx context.Context, store storage.Storage, filter types.IssueF
 	}
 
 	// Initial display
-	issues, _ := store.SearchIssues(ctx, "", filter)
+	issues, err := store.SearchIssues(ctx, "", filter)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error querying issues: %v\n", err)
+		return
+	}
 	sortIssues(issues, sortBy, reverse)
 	displayPrettyList(issues, true)
 
@@ -171,7 +173,11 @@ func watchIssues(ctx context.Context, store storage.Storage, filter types.IssueF
 						debounceTimer.Stop()
 					}
 					debounceTimer = time.AfterFunc(debounceDelay, func() {
-						issues, _ := store.SearchIssues(ctx, "", filter)
+						issues, err := store.SearchIssues(ctx, "", filter)
+						if err != nil {
+							fmt.Fprintf(os.Stderr, "Error refreshing issues: %v\n", err)
+							return
+						}
 						sortIssues(issues, sortBy, reverse)
 						displayPrettyList(issues, true)
 						fmt.Fprintf(os.Stderr, "\nWatching for changes... (Press Ctrl+C to exit)\n")
@@ -298,8 +304,10 @@ var listCmd = &cobra.Command{
 		// Parent filtering (--filter-parent is alias for --parent)
 		parentID, _ := cmd.Flags().GetString("parent")
 		if parentID == "" {
+			// Flag registered; GetString only errors if flag doesn't exist
 			parentID, _ = cmd.Flags().GetString("filter-parent")
 		}
+		noParent, _ := cmd.Flags().GetBool("no-parent")
 
 		// Molecule type filtering
 		molTypeStr, _ := cmd.Flags().GetString("mol-type")
@@ -552,8 +560,15 @@ var listCmd = &cobra.Command{
 		}
 
 		// Parent filtering: filter children by parent issue
+		if parentID != "" && noParent {
+			fmt.Fprintf(os.Stderr, "Error: --parent and --no-parent are mutually exclusive\n")
+			os.Exit(1)
+		}
 		if parentID != "" {
 			filter.ParentID = &parentID
+		}
+		if noParent {
+			filter.NoParent = true
 		}
 
 		// Molecule type filtering
@@ -617,10 +632,8 @@ var listCmd = &cobra.Command{
 				fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 				os.Exit(1)
 			}
-			defer func() { _ = rigStore.Close() }()
+			defer func() { _ = rigStore.Close() }() // Best effort cleanup
 			activeStore = rigStore
-		} else {
-			requireFreshDB(ctx)
 		}
 
 		// Direct mode
@@ -628,18 +641,6 @@ var listCmd = &cobra.Command{
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)
-		}
-
-		// If no issues found, check if git has issues and auto-import (only for local store)
-		if len(issues) == 0 && rigOverride == "" {
-			if checkAndAutoImport(ctx, activeStore) {
-				// Re-run the query after import
-				issues, err = activeStore.SearchIssues(ctx, "", filter)
-				if err != nil {
-					fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-					os.Exit(1)
-				}
-			}
 		}
 
 		// Apply sorting
@@ -667,6 +668,7 @@ var listCmd = &cobra.Command{
 				}
 
 				// Load dependencies for tree structure
+				// Best effort: display gracefully degrades with empty data
 				allDeps, _ := activeStore.GetAllDependencyRecords(ctx)
 				displayPrettyListWithDeps(treeIssues, false, allDeps)
 				return
@@ -674,6 +676,7 @@ var listCmd = &cobra.Command{
 
 			// Regular tree display (no parent filter)
 			// Load dependencies for tree structure
+			// Best effort: display gracefully degrades with empty data
 			allDeps, _ := activeStore.GetAllDependencyRecords(ctx)
 			displayPrettyListWithDeps(issues, false, allDeps)
 			// Show truncation hint if we hit the limit (GH#788)
@@ -698,6 +701,7 @@ var listCmd = &cobra.Command{
 			for i, issue := range issues {
 				issueIDs[i] = issue.ID
 			}
+			// Best effort: display gracefully degrades with empty data
 			labelsMap, _ := activeStore.GetLabelsForIssues(ctx, issueIDs)
 			depCounts, _ := activeStore.GetDependencyCounts(ctx, issueIDs)
 			allDeps, _ := activeStore.GetDependencyRecordsForIssues(ctx, issueIDs)
@@ -735,9 +739,11 @@ var listCmd = &cobra.Command{
 		for i, issue := range issues {
 			issueIDs[i] = issue.ID
 		}
+		// Best effort: display gracefully degrades with empty data
 		labelsMap, _ := activeStore.GetLabelsForIssues(ctx, issueIDs)
 
 		// Load dependencies for blocking info display
+		// Best effort: display gracefully degrades with empty data
 		allDepsForList, _ := activeStore.GetAllDependencyRecords(ctx)
 		closedIDs := getClosedBlockerIDs(ctx, activeStore, allDepsForList)
 		blockedByMap, blocksMap, _ := buildBlockingMaps(allDepsForList, closedIDs)
@@ -837,6 +843,8 @@ func init() {
 	// Parent filtering: filter children by parent issue
 	listCmd.Flags().String("parent", "", "Filter by parent issue ID (shows children of specified issue)")
 	listCmd.Flags().String("filter-parent", "", "Alias for --parent")
+	_ = listCmd.Flags().MarkHidden("filter-parent") // Only fails if flag missing (caught in tests)
+	listCmd.Flags().Bool("no-parent", false, "Exclude child issues (show only top-level issues)")
 
 	// Molecule type filtering
 	listCmd.Flags().String("mol-type", "", "Filter by molecule type: swarm, patrol, or work")

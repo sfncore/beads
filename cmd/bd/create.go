@@ -11,12 +11,10 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/steveyegge/beads/internal/config"
-	"github.com/steveyegge/beads/internal/configfile"
 	"github.com/steveyegge/beads/internal/debug"
 	"github.com/steveyegge/beads/internal/hooks"
 	"github.com/steveyegge/beads/internal/routing"
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/storage/factory"
+	"github.com/steveyegge/beads/internal/storage/dolt"
 	"github.com/steveyegge/beads/internal/timeparsing"
 	"github.com/steveyegge/beads/internal/types"
 	"github.com/steveyegge/beads/internal/ui"
@@ -382,8 +380,8 @@ var createCmd = &cobra.Command{
 		}
 
 		// Switch to target repo for multi-repo support (bd-6x6g)
-		// When routing to a different repo, we bypass daemon mode and use direct storage
-		var targetStore storage.Storage
+		// When routing to a different repo, we use direct storage access
+		var targetStore *dolt.DoltStore
 		if repoPath != "." {
 			targetBeadsDir := routing.ExpandPath(repoPath)
 			debug.Logf("DEBUG: Routing to target repo: %s\n", targetBeadsDir)
@@ -396,7 +394,7 @@ var createCmd = &cobra.Command{
 			// Open new store for target repo using factory to respect backend config
 			targetBeadsDirPath := filepath.Join(targetBeadsDir, ".beads")
 			var err error
-			targetStore, err = factory.NewFromConfig(rootCtx, targetBeadsDirPath)
+			targetStore, err = dolt.NewFromConfig(rootCtx, targetBeadsDirPath)
 			if err != nil {
 				FatalError("failed to open target store: %v", err)
 			}
@@ -406,7 +404,7 @@ var createCmd = &cobra.Command{
 			// will close whatever store is assigned to the global `store` variable.
 			// This fixes the "database is closed" error during auto-flush (GH#routing-close-bug).
 			if store != nil {
-				_ = store.Close()
+				_ = store.Close() // Best effort cleanup on error path
 			}
 
 			// Replace store for remainder of create operation
@@ -451,11 +449,11 @@ var createCmd = &cobra.Command{
 
 			// Get database prefix and allowed prefixes from config
 			var dbPrefix, allowedPrefixes string
-			dbPrefix, _ = store.GetConfig(ctx, "issue_prefix")
+			dbPrefix, _ = store.GetConfig(ctx, "issue_prefix") // Best effort: empty prefix is a valid fallback
 			if dbPrefix == "" {
 				dbPrefix = config.GetString("issue-prefix")
 			}
-			allowedPrefixes, _ = store.GetConfig(ctx, "allowed_prefixes")
+			allowedPrefixes, _ = store.GetConfig(ctx, "allowed_prefixes") // Best effort: empty means no prefix restriction
 
 			// Use ValidateIDPrefixAllowed which handles multi-hyphen prefixes correctly (GH#1135)
 			// This checks if the ID starts with an allowed prefix, rather than extracting
@@ -602,6 +600,10 @@ var createCmd = &cobra.Command{
 					continue
 				}
 				depType = types.DependencyType(strings.TrimSpace(parts[0]))
+				// "depends-on" is an alias — keep default direction (new issue depends on target)
+				if depType == "depends-on" {
+					depType = types.DepBlocks
+				}
 				dependsOnID = strings.TrimSpace(parts[1])
 			} else {
 				// Default to "blocks" if no type specified
@@ -620,6 +622,12 @@ var createCmd = &cobra.Command{
 				IssueID:     issue.ID,
 				DependsOnID: dependsOnID,
 				Type:        depType,
+			}
+			// When user explicitly says "blocks:X", they mean "new issue blocks X"
+			// So X depends on the new issue — swap direction
+			if depType == types.DepBlocks && strings.Contains(depSpec, ":") {
+				dep.IssueID = dependsOnID
+				dep.DependsOnID = issue.ID
 			}
 			if err := store.AddDependency(ctx, dep, actor); err != nil {
 				WarnError("failed to add dependency %s -> %s: %v", issue.ID, dependsOnID, err)
@@ -690,7 +698,7 @@ var createCmd = &cobra.Command{
 // flushRoutedRepo ensures the target repo's JSONL is updated after routing an issue.
 // This is critical for multi-repo hydration to work correctly (bd-fix-routing).
 // Always writes local JSONL as a safety net (even in dolt-native mode).
-func flushRoutedRepo(targetStore storage.Storage, repoPath string) {
+func flushRoutedRepo(targetStore *dolt.DoltStore, repoPath string) {
 	ctx := context.Background()
 
 	// Expand the repo path and construct the .beads directory path
@@ -712,7 +720,7 @@ func flushRoutedRepo(targetStore storage.Storage, repoPath string) {
 	debug.Logf("attempting to flush routed repo at %s", targetBeadsDir)
 
 	// Export directly to JSONL
-	issues, err := targetStore.SearchIssues(ctx, "", types.IssueFilter{IncludeTombstones: true})
+	issues, err := targetStore.SearchIssues(ctx, "", types.IssueFilter{})
 	if err != nil {
 		WarnError("failed to query issues for export: %v", err)
 		return
@@ -727,7 +735,7 @@ func flushRoutedRepo(targetStore storage.Storage, repoPath string) {
 }
 
 // performAtomicExport writes issues to JSONL using atomic temp file + rename
-func performAtomicExport(_ context.Context, jsonlPath string, issues []*types.Issue, _ storage.Storage) error {
+func performAtomicExport(_ context.Context, jsonlPath string, issues []*types.Issue, _ *dolt.DoltStore) error {
 	// Create temp file with PID suffix for atomic write
 	tempPath := fmt.Sprintf("%s.tmp.%d", jsonlPath, os.Getpid())
 
@@ -735,7 +743,7 @@ func performAtomicExport(_ context.Context, jsonlPath string, issues []*types.Is
 	defer func() {
 		// Remove temp file if it still exists (rename failed or error occurred)
 		if _, err := os.Stat(tempPath); err == nil {
-			_ = os.Remove(tempPath)
+			_ = os.Remove(tempPath) // Best effort cleanup of temp file
 		}
 	}()
 
@@ -749,14 +757,14 @@ func performAtomicExport(_ context.Context, jsonlPath string, issues []*types.Is
 	encoder := json.NewEncoder(tempFile)
 	for _, issue := range issues {
 		if err := encoder.Encode(issue); err != nil {
-			_ = tempFile.Close()
+			_ = tempFile.Close() // Best effort cleanup
 			return fmt.Errorf("failed to encode issue %s: %w", issue.ID, err)
 		}
 	}
 
 	// Sync to disk before rename
 	if err := tempFile.Sync(); err != nil {
-		_ = tempFile.Close()
+		_ = tempFile.Close() // Best effort cleanup
 		return fmt.Errorf("failed to sync temp file: %w", err)
 	}
 
@@ -778,7 +786,7 @@ func init() {
 	createCmd.Flags().Bool("silent", false, "Output only the issue ID (for scripting)")
 	createCmd.Flags().Bool("dry-run", false, "Preview what would be created without actually creating")
 	registerPriorityFlag(createCmd, "2")
-	createCmd.Flags().StringP("type", "t", "task", "Issue type (bug|feature|task|epic|chore|decision|merge-request|molecule|gate|agent|role|rig|convoy|event); aliases: enhancement/feat→feature, dec/adr→decision")
+	createCmd.Flags().StringP("type", "t", "task", "Issue type (bug|feature|task|epic|chore|decision); custom types require types.custom config; aliases: enhancement/feat→feature, dec/adr→decision")
 	registerCommonIssueFlags(createCmd)
 	createCmd.Flags().String("spec-id", "", "Link to specification document")
 	createCmd.Flags().StringSliceP("labels", "l", []string{}, "Labels (comma-separated)")
@@ -820,7 +828,7 @@ func init() {
 }
 
 // createInRig creates an issue in a different rig using --rig flag or auto-routing.
-// This bypasses the normal daemon/direct flow and directly creates in the target rig.
+// This directly creates in the target rig's database.
 func createInRig(cmd *cobra.Command, rigName, explicitID, title, description, issueType string, priority int, design, acceptance, notes, assignee string, labels []string, externalRef, specID string, wisp bool) {
 	ctx := rootCtx
 
@@ -837,7 +845,7 @@ func createInRig(cmd *cobra.Command, rigName, explicitID, title, description, is
 	}
 
 	// Open storage for the target rig using factory to respect backend config
-	targetStore, err := factory.NewFromConfig(ctx, targetBeadsDir)
+	targetStore, err := dolt.NewFromConfig(ctx, targetBeadsDir)
 	if err != nil {
 		FatalError("failed to open rig %q database: %v", rigName, err)
 	}
@@ -990,8 +998,8 @@ func findTownBeadsDir() (string, error) {
 	return "", fmt.Errorf("no routes.jsonl found in any parent .beads directory")
 }
 
-// formatTimeForRPC converts a *time.Time to RFC3339 string for daemon RPC calls.
-// Returns empty string if t is nil, allowing the daemon to distinguish "not set" from "set to zero".
+// formatTimeForRPC converts a *time.Time to RFC3339 string for RPC calls.
+// Returns empty string if t is nil, to distinguish "not set" from "set to zero".
 func formatTimeForRPC(t *time.Time) string {
 	if t == nil {
 		return ""
@@ -1002,7 +1010,7 @@ func formatTimeForRPC(t *time.Time) string {
 // ensureBeadsDirForPath ensures a beads directory exists at the target path.
 // If the .beads directory doesn't exist, it creates it and initializes with
 // the same prefix as the source store (T010, T012: prefix inheritance).
-func ensureBeadsDirForPath(ctx context.Context, targetPath string, sourceStore storage.Storage) error {
+func ensureBeadsDirForPath(ctx context.Context, targetPath string, sourceStore *dolt.DoltStore) error {
 	beadsDir := filepath.Join(targetPath, ".beads")
 	dbPath := filepath.Join(beadsDir, "beads.db")
 
@@ -1029,18 +1037,18 @@ func ensureBeadsDirForPath(ctx context.Context, targetPath string, sourceStore s
 		}
 	}
 
-	// Initialize database - it will be created when factory.New is called
+	// Initialize database - it will be created when dolt.New is called
 	// But we need to set the prefix if source store has one (T012: prefix inheritance)
 	if sourceStore != nil {
 		sourcePrefix, err := sourceStore.GetConfig(ctx, "issue_prefix")
 		if err == nil && sourcePrefix != "" {
 			// Open target store temporarily to set prefix
-			tempStore, err := factory.New(ctx, configfile.BackendDolt, dbPath)
+			tempStore, err := dolt.New(ctx, &dolt.Config{Path: dbPath})
 			if err != nil {
 				return fmt.Errorf("failed to initialize target database: %w", err)
 			}
 			if err := tempStore.SetConfig(ctx, "issue_prefix", sourcePrefix); err != nil {
-				_ = tempStore.Close()
+				_ = tempStore.Close() // Best effort cleanup on error path
 				return fmt.Errorf("failed to set prefix in target store: %w", err)
 			}
 			if err := tempStore.Close(); err != nil {

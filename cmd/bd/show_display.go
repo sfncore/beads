@@ -61,6 +61,12 @@ func displayShowIssue(ctx context.Context, issueID string) {
 	// Dependencies (what this issue depends on)
 	relatedSeen := make(map[string]*types.IssueWithDependencyMetadata)
 	depsWithMeta, _ := issueStore.GetDependenciesWithMetadata(ctx, issue.ID)
+
+	// Resolve external deps via routing (bd-k0pfm)
+	if externalDeps, err := resolveExternalDepsViaRouting(ctx, issueStore, issue.ID); err == nil {
+		depsWithMeta = append(depsWithMeta, externalDeps...)
+	}
+
 	if len(depsWithMeta) > 0 {
 		var blocks, parent, discovered []*types.IssueWithDependencyMetadata
 		for _, dep := range depsWithMeta {
@@ -162,7 +168,6 @@ func displayShowIssue(ctx context.Context, issueID string) {
 // watchIssue watches for changes to an issue and auto-refreshes the display (GH#654)
 func watchIssue(ctx context.Context, issueID string) {
 	// Ensure we have a fresh database for watching (matches non-watch path)
-	requireFreshDB(ctx)
 
 	// Find .beads directory
 	beadsDir := ".beads"

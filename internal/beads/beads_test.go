@@ -68,19 +68,17 @@ func TestFindDatabasePathInTree(t *testing.T) {
 	}
 	defer os.RemoveAll(tmpDir)
 
-	// Create .beads directory with a database file
+	// Create .beads directory with a dolt database directory
 	beadsDir := filepath.Join(tmpDir, ".beads")
 	err = os.MkdirAll(beadsDir, 0o750)
 	if err != nil {
 		t.Fatalf("Failed to create .beads dir: %v", err)
 	}
 
-	dbPath := filepath.Join(beadsDir, "test.db")
-	f, err := os.Create(dbPath)
-	if err != nil {
-		t.Fatalf("Failed to create db file: %v", err)
+	doltDir := filepath.Join(beadsDir, "dolt")
+	if err := os.MkdirAll(doltDir, 0o750); err != nil {
+		t.Fatalf("Failed to create dolt dir: %v", err)
 	}
-	f.Close()
 
 	// Set BEADS_DIR to our test .beads directory to override git repo detection
 	os.Setenv("BEADS_DIR", beadsDir)
@@ -98,9 +96,9 @@ func TestFindDatabasePathInTree(t *testing.T) {
 	result := FindDatabasePath()
 
 	// Resolve symlinks for both paths (macOS uses /private/var symlinked to /var)
-	expectedPath, err := filepath.EvalSymlinks(dbPath)
+	expectedPath, err := filepath.EvalSymlinks(doltDir)
 	if err != nil {
-		expectedPath = dbPath
+		expectedPath = doltDir
 	}
 	resultPath, err := filepath.EvalSymlinks(result)
 	if err != nil {
@@ -715,13 +713,13 @@ func TestFindDatabasePathWithRedirect(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Create target .beads directory with actual database
+	// Create target .beads directory with actual dolt database
 	targetDir := filepath.Join(tmpDir, "actual", ".beads")
 	if err := os.MkdirAll(targetDir, 0755); err != nil {
 		t.Fatal(err)
 	}
-	targetDB := filepath.Join(targetDir, "beads.db")
-	if err := os.WriteFile(targetDB, []byte{}, 0644); err != nil {
+	targetDolt := filepath.Join(targetDir, "dolt")
+	if err := os.MkdirAll(targetDolt, 0755); err != nil {
 		t.Fatal(err)
 	}
 
@@ -740,10 +738,10 @@ func TestFindDatabasePathWithRedirect(t *testing.T) {
 
 	// Resolve symlinks for comparison
 	resultResolved, _ := filepath.EvalSymlinks(result)
-	targetDBResolved, _ := filepath.EvalSymlinks(targetDB)
+	targetDoltResolved, _ := filepath.EvalSymlinks(targetDolt)
 
-	if resultResolved != targetDBResolved {
-		t.Errorf("FindDatabasePath() = %q, want %q (via redirect)", result, targetDB)
+	if resultResolved != targetDoltResolved {
+		t.Errorf("FindDatabasePath() = %q, want %q (via redirect)", result, targetDolt)
 	}
 }
 
@@ -1067,6 +1065,122 @@ func TestFindBeadsDir_Worktree(t *testing.T) {
 	}
 }
 
+// TestFindBeadsDir_SiblingWorktree tests that FindBeadsDir does not escape past
+// the worktree boundary when the worktree is a sibling of the main repo (not a
+// child). This is the regression test for GH#1653.
+func TestFindBeadsDir_SiblingWorktree(t *testing.T) {
+	// Save original state
+	originalEnv := os.Getenv("BEADS_DIR")
+	defer func() {
+		if originalEnv != "" {
+			os.Setenv("BEADS_DIR", originalEnv)
+		} else {
+			os.Unsetenv("BEADS_DIR")
+		}
+	}()
+	os.Unsetenv("BEADS_DIR")
+
+	// Create temporary directory for our test
+	tmpDir, err := os.MkdirTemp("", "beads-sibling-worktree-*")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.RemoveAll(tmpDir)
+
+	// Resolve symlinks (macOS /var -> /private/var)
+	tmpDir, err = filepath.EvalSymlinks(tmpDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Structure: tmpDir/main-repo  (git repo with .beads/)
+	//            tmpDir/sibling-wt (worktree, sibling of main-repo)
+	//            tmpDir/.beads/    (UNRELATED beads dir that should NOT be found)
+
+	mainRepoDir := filepath.Join(tmpDir, "main-repo")
+	if err := os.MkdirAll(mainRepoDir, 0755); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd := exec.Command("git", "init")
+	cmd.Dir = mainRepoDir
+	if err := cmd.Run(); err != nil {
+		t.Skipf("git not available: %v", err)
+	}
+
+	cmd = exec.Command("git", "config", "user.email", "test@example.com")
+	cmd.Dir = mainRepoDir
+	_ = cmd.Run()
+	cmd = exec.Command("git", "config", "user.name", "Test User")
+	cmd.Dir = mainRepoDir
+	_ = cmd.Run()
+
+	// Create .beads in main repo
+	mainBeadsDir := filepath.Join(mainRepoDir, ".beads")
+	if err := os.MkdirAll(mainBeadsDir, 0755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(mainBeadsDir, "beads.db"), []byte{}, 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	// Initial commit
+	if err := os.WriteFile(filepath.Join(mainRepoDir, "README.md"), []byte("# Test\n"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	cmd = exec.Command("git", "add", "-A")
+	cmd.Dir = mainRepoDir
+	_ = cmd.Run()
+	cmd = exec.Command("git", "commit", "-m", "Initial commit")
+	cmd.Dir = mainRepoDir
+	if err := cmd.Run(); err != nil {
+		t.Fatalf("git commit failed: %v", err)
+	}
+
+	// Create sibling worktree (NOT a child of main-repo)
+	siblingDir := filepath.Join(tmpDir, "sibling-wt")
+	cmd = exec.Command("git", "worktree", "add", siblingDir, "HEAD")
+	cmd.Dir = mainRepoDir
+	if err := cmd.Run(); err != nil {
+		t.Fatalf("git worktree add failed: %v", err)
+	}
+	defer func() {
+		cmd := exec.Command("git", "worktree", "remove", siblingDir)
+		cmd.Dir = mainRepoDir
+		_ = cmd.Run()
+	}()
+
+	// Create an UNRELATED .beads/ in the parent directory (tmpDir)
+	// Before the fix, the walk would escape past worktreeRoot and find this
+	unrelatedBeadsDir := filepath.Join(tmpDir, ".beads")
+	if err := os.MkdirAll(unrelatedBeadsDir, 0755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(unrelatedBeadsDir, "beads.db"), []byte{}, 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	// Change to the sibling worktree
+	t.Chdir(siblingDir)
+	git.ResetCaches()
+
+	result := FindBeadsDir()
+
+	resultResolved, _ := filepath.EvalSymlinks(result)
+	mainBeadsDirResolved, _ := filepath.EvalSymlinks(mainBeadsDir)
+	unrelatedResolved, _ := filepath.EvalSymlinks(unrelatedBeadsDir)
+
+	// Should find main repo's .beads (via the mainRepoRoot check in step 2)
+	if resultResolved != mainBeadsDirResolved {
+		t.Errorf("FindBeadsDir() = %q, want main repo .beads %q", result, mainBeadsDir)
+	}
+
+	// Must NOT find the unrelated parent .beads
+	if resultResolved == unrelatedResolved {
+		t.Errorf("FindBeadsDir() escaped worktree boundary and found unrelated %q", unrelatedBeadsDir)
+	}
+}
+
 // TestFindDatabasePath_Worktree tests that FindDatabasePath correctly finds the
 // shared database in the main repository when accessed from a git worktree. This is the
 // key test for bd-745 - worktrees should share the same .beads database.
@@ -1116,13 +1230,13 @@ func TestFindDatabasePath_Worktree(t *testing.T) {
 	cmd.Dir = mainRepoDir
 	_ = cmd.Run()
 
-	// Create .beads directory in main repo with database
+	// Create .beads directory in main repo with dolt database
 	mainBeadsDir := filepath.Join(mainRepoDir, ".beads")
 	if err := os.MkdirAll(mainBeadsDir, 0755); err != nil {
 		t.Fatal(err)
 	}
-	mainDBPath := filepath.Join(mainBeadsDir, "beads.db")
-	if err := os.WriteFile(mainDBPath, []byte{}, 0644); err != nil {
+	mainDoltDir := filepath.Join(mainBeadsDir, "dolt")
+	if err := os.MkdirAll(mainDoltDir, 0755); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1165,10 +1279,10 @@ func TestFindDatabasePath_Worktree(t *testing.T) {
 
 	// Resolve symlinks for comparison
 	resultResolved, _ := filepath.EvalSymlinks(result)
-	mainDBPathResolved, _ := filepath.EvalSymlinks(mainDBPath)
+	mainDoltResolved, _ := filepath.EvalSymlinks(mainDoltDir)
 
-	if resultResolved != mainDBPathResolved {
-		t.Errorf("FindDatabasePath() = %q, want main repo shared db %q", result, mainDBPath)
+	if resultResolved != mainDoltResolved {
+		t.Errorf("FindDatabasePath() = %q, want main repo shared db %q", result, mainDoltDir)
 	}
 }
 
@@ -1221,13 +1335,13 @@ func TestFindDatabasePath_WorktreeNoLocalDB(t *testing.T) {
 	cmd.Dir = mainRepoDir
 	_ = cmd.Run()
 
-	// Create .beads directory in main repo with database
+	// Create .beads directory in main repo with dolt database
 	mainBeadsDir := filepath.Join(mainRepoDir, ".beads")
 	if err := os.MkdirAll(mainBeadsDir, 0755); err != nil {
 		t.Fatal(err)
 	}
-	mainDBPath := filepath.Join(mainBeadsDir, "beads.db")
-	if err := os.WriteFile(mainDBPath, []byte{}, 0644); err != nil {
+	mainDoltDir := filepath.Join(mainBeadsDir, "dolt")
+	if err := os.MkdirAll(mainDoltDir, 0755); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1273,9 +1387,9 @@ func TestFindDatabasePath_WorktreeNoLocalDB(t *testing.T) {
 
 	// Resolve symlinks for comparison
 	resultResolved, _ := filepath.EvalSymlinks(result)
-	mainDBPathResolved, _ := filepath.EvalSymlinks(mainDBPath)
+	mainDoltResolved, _ := filepath.EvalSymlinks(mainDoltDir)
 
-	if resultResolved != mainDBPathResolved {
-		t.Errorf("FindDatabasePath() = %q, want main repo shared db %q", result, mainDBPath)
+	if resultResolved != mainDoltResolved {
+		t.Errorf("FindDatabasePath() = %q, want main repo shared db %q", result, mainDoltDir)
 	}
 }

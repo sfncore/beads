@@ -11,7 +11,7 @@ import (
 	"github.com/steveyegge/beads/internal/beads"
 	"github.com/steveyegge/beads/internal/configfile"
 	"github.com/steveyegge/beads/internal/debug"
-	"github.com/steveyegge/beads/internal/storage/factory"
+	"github.com/steveyegge/beads/internal/storage/dolt"
 )
 
 // localVersionFile is the gitignored file that stores the last bd version used locally.
@@ -46,7 +46,7 @@ func trackBdVersion() {
 	// Update local version file (best effort)
 	// Only write if version actually changed to minimize I/O
 	if lastVersion != Version {
-		_ = writeLocalVersion(localVersionPath, Version)
+		_ = writeLocalVersion(localVersionPath, Version) // Best effort: version tracking is advisory
 	}
 
 	// Also ensure metadata.json exists with proper defaults (for JSONL export name)
@@ -201,13 +201,11 @@ func findActualJSONLFile(beadsDir string) string {
 
 // autoMigrateOnVersionBump automatically migrates the database when CLI version changes.
 // This function is best-effort - failures are silent to avoid disrupting commands.
-// Called from PersistentPreRun after daemon check but before opening DB for main operation.
+// Called from PersistentPreRun before opening DB for main operation.
 //
-// IMPORTANT: This must be called AFTER determining we're in direct mode (no daemon)
-// and BEFORE opening the database, to avoid: 1) conflicts with daemon, 2) opening DB twice.
+// IMPORTANT: This must be called BEFORE opening the database to avoid opening DB twice.
 //
-// beadsDir is the path to the .beads directory. The function uses factory.NewFromConfig
-// to open the correct backend (SQLite or Dolt) based on metadata.json configuration.
+// beadsDir is the path to the .beads directory.
 func autoMigrateOnVersionBump(beadsDir string) {
 	// Only migrate if version upgrade was detected
 	if !versionUpgradeDetected {
@@ -246,7 +244,7 @@ func autoMigrateOnVersionBump(beadsDir string) {
 		ctx = context.Background()
 	}
 
-	store, err := factory.NewFromConfig(ctx, beadsDir)
+	store, err := dolt.NewFromConfig(ctx, beadsDir)
 	if err != nil {
 		// Failed to open database - skip migration
 		debug.Logf("auto-migrate: failed to open database: %v", err)
@@ -258,7 +256,7 @@ func autoMigrateOnVersionBump(beadsDir string) {
 	if err != nil {
 		// Failed to read version - skip migration
 		debug.Logf("auto-migrate: failed to read database version: %v", err)
-		_ = store.Close()
+		_ = store.Close() // Best effort cleanup on error path
 		return
 	}
 
@@ -266,7 +264,7 @@ func autoMigrateOnVersionBump(beadsDir string) {
 	if dbVersion == Version {
 		// Database is already at current version
 		debug.Logf("auto-migrate: database already at version %s", Version)
-		_ = store.Close()
+		_ = store.Close() // Best effort cleanup on error path
 		return
 	}
 
@@ -274,12 +272,12 @@ func autoMigrateOnVersionBump(beadsDir string) {
 	maxVersion, _ := store.GetMetadata(ctx, "bd_version_max")
 	if dbVersion != "" && doctor.CompareVersions(Version, dbVersion) < 0 {
 		debug.Logf("auto-migrate: refusing downgrade from %s to %s", dbVersion, Version)
-		_ = store.Close()
+		_ = store.Close() // Best effort cleanup on error path
 		return
 	}
 	if maxVersion != "" && doctor.CompareVersions(Version, maxVersion) < 0 {
 		debug.Logf("auto-migrate: refusing downgrade (max version %s > current %s)", maxVersion, Version)
-		_ = store.Close()
+		_ = store.Close() // Best effort cleanup on error path
 		return
 	}
 
@@ -288,7 +286,7 @@ func autoMigrateOnVersionBump(beadsDir string) {
 	if err := store.SetMetadata(ctx, "bd_version", Version); err != nil {
 		// Migration failed - log and continue
 		debug.Logf("auto-migrate: failed to update database version: %v", err)
-		_ = store.Close()
+		_ = store.Close() // Best effort cleanup on error path
 		return
 	}
 

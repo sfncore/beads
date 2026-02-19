@@ -100,13 +100,13 @@ func RunServerHealthChecks(path string) ServerHealthResult {
 	if versionCheck.Status == StatusError {
 		result.OverallOK = false
 		if db != nil {
-			_ = db.Close()
+			_ = db.Close() // Best effort cleanup
 		}
 		return result
 	}
 	defer func() {
 		if db != nil {
-			_ = db.Close()
+			_ = db.Close() // Best effort cleanup
 		}
 	}()
 
@@ -151,7 +151,7 @@ func checkServerReachable(host string, port int) DoctorCheck {
 			Category: CategoryFederation,
 		}
 	}
-	_ = conn.Close()
+	_ = conn.Close() // Best effort cleanup
 
 	return DoctorCheck{
 		Name:     "Server Reachable",
@@ -203,7 +203,7 @@ func checkDoltVersion(cfg *configfile.Config) (DoctorCheck, *sql.DB) {
 	defer cancel()
 
 	if err := db.PingContext(ctx); err != nil {
-		_ = db.Close()
+		_ = db.Close() // Best effort cleanup
 		return DoctorCheck{
 			Name:     "Dolt Version",
 			Status:   StatusError,
@@ -220,7 +220,7 @@ func checkDoltVersion(cfg *configfile.Config) (DoctorCheck, *sql.DB) {
 	if err != nil {
 		// If dolt_version() doesn't exist, it's not a Dolt server
 		if strings.Contains(err.Error(), "Unknown") || strings.Contains(err.Error(), "doesn't exist") {
-			_ = db.Close()
+			_ = db.Close() // Best effort cleanup
 			return DoctorCheck{
 				Name:     "Dolt Version",
 				Status:   StatusError,
@@ -230,7 +230,7 @@ func checkDoltVersion(cfg *configfile.Config) (DoctorCheck, *sql.DB) {
 				Category: CategoryFederation,
 			}, nil
 		}
-		_ = db.Close()
+		_ = db.Close() // Best effort cleanup
 		return DoctorCheck{
 			Name:     "Dolt Version",
 			Status:   StatusError,
@@ -284,7 +284,7 @@ func checkDatabaseExists(db *sql.DB, database string) DoctorCheck {
 			Name:     "Database Exists",
 			Status:   StatusError,
 			Message:  fmt.Sprintf("Database '%s' not found", database),
-			Fix:      fmt.Sprintf("Run 'bd init --backend dolt' to create the '%s' database", database),
+			Fix:      fmt.Sprintf("Run 'bd init' to create the '%s' database", database),
 			Category: CategoryFederation,
 		}
 	}
@@ -343,7 +343,7 @@ func checkSchemaCompatible(db *sql.DB, database string) DoctorCheck {
 				Name:     "Schema Compatible",
 				Status:   StatusError,
 				Message:  "Issues table not found",
-				Fix:      "Run 'bd init --backend dolt' to create schema",
+				Fix:      "Run 'bd init' to create schema",
 				Category: CategoryFederation,
 			}
 		}
