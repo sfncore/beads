@@ -207,8 +207,8 @@ func ResolveBeadsDirForRig(rigOrPrefix, currentBeadsDir string) (beadsDir string
 // Example: If routes.jsonl has {"prefix": "bd-", "path": "beads/mayor/rig"}
 // then ResolveToExternalRef("bd-abc", beadsDir) returns "external:beads:bd-abc"
 func ResolveToExternalRef(id, beadsDir string) string {
-	routes, err := LoadRoutes(beadsDir)
-	if err != nil || len(routes) == 0 {
+	routes, _ := findTownRoutes(beadsDir)
+	if len(routes) == 0 {
 		return ""
 	}
 

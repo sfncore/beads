@@ -140,11 +140,44 @@ func TestExtractProjectFromPath(t *testing.T) {
 }
 
 func TestResolveToExternalRef(t *testing.T) {
-	// This test is limited since it requires a routes.jsonl file
-	// Just test that it returns empty string for nonexistent directory
-	got := ResolveToExternalRef("bd-abc", "/nonexistent/path")
+	// Create a temp dir with a routes.jsonl to test prefix matching
+	tmpDir := t.TempDir()
+	beadsDir := filepath.Join(tmpDir, ".beads")
+	if err := os.MkdirAll(beadsDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+
+	routesContent := `{"prefix":"bd-","path":"beads_src/mayor/rig"}
+{"prefix":"gt-","path":"gastown/mayor/rig"}
+`
+	if err := os.WriteFile(filepath.Join(beadsDir, "routes.jsonl"), []byte(routesContent), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	// Should resolve bd- prefix to external ref
+	got := ResolveToExternalRef("bd-abc", beadsDir)
+	want := "external:beads_src:bd-abc"
+	if got != want {
+		t.Errorf("ResolveToExternalRef(bd-abc) = %q, want %q", got, want)
+	}
+
+	// Should resolve gt- prefix to external ref
+	got = ResolveToExternalRef("gt-xyz", beadsDir)
+	want = "external:gastown:gt-xyz"
+	if got != want {
+		t.Errorf("ResolveToExternalRef(gt-xyz) = %q, want %q", got, want)
+	}
+
+	// Unknown prefix should return empty
+	got = ResolveToExternalRef("zz-unknown", beadsDir)
 	if got != "" {
-		t.Errorf("ResolveToExternalRef() = %q, want empty string for nonexistent path", got)
+		t.Errorf("ResolveToExternalRef(zz-unknown) = %q, want empty", got)
+	}
+
+	// No prefix should return empty
+	got = ResolveToExternalRef("noprefixid", beadsDir)
+	if got != "" {
+		t.Errorf("ResolveToExternalRef(noprefixid) = %q, want empty", got)
 	}
 }
 
