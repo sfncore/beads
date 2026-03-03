@@ -238,6 +238,38 @@ func (s *InstrumentedStorage) GetDependencyTree(ctx context.Context, issueID str
 	return v, err
 }
 
+func (s *InstrumentedStorage) GetDependenciesForIssues(ctx context.Context, issueIDs []string) (map[string][]*types.Issue, error) {
+	attrs := []attribute.KeyValue{attribute.Int("bd.issue.count", len(issueIDs))}
+	ctx, span, t := s.op(ctx, "GetDependenciesForIssues", attrs...)
+	v, err := s.inner.GetDependenciesForIssues(ctx, issueIDs)
+	s.done(ctx, span, t, err, attrs...)
+	return v, err
+}
+
+func (s *InstrumentedStorage) GetDependentsForIssues(ctx context.Context, issueIDs []string) (map[string][]*types.Issue, error) {
+	attrs := []attribute.KeyValue{attribute.Int("bd.issue.count", len(issueIDs))}
+	ctx, span, t := s.op(ctx, "GetDependentsForIssues", attrs...)
+	v, err := s.inner.GetDependentsForIssues(ctx, issueIDs)
+	s.done(ctx, span, t, err, attrs...)
+	return v, err
+}
+
+func (s *InstrumentedStorage) GetDependenciesWithMetadataForIssues(ctx context.Context, issueIDs []string) (map[string][]*types.IssueWithDependencyMetadata, error) {
+	attrs := []attribute.KeyValue{attribute.Int("bd.issue.count", len(issueIDs))}
+	ctx, span, t := s.op(ctx, "GetDependenciesWithMetadataForIssues", attrs...)
+	v, err := s.inner.GetDependenciesWithMetadataForIssues(ctx, issueIDs)
+	s.done(ctx, span, t, err, attrs...)
+	return v, err
+}
+
+func (s *InstrumentedStorage) GetDependentsWithMetadataForIssues(ctx context.Context, issueIDs []string) (map[string][]*types.IssueWithDependencyMetadata, error) {
+	attrs := []attribute.KeyValue{attribute.Int("bd.issue.count", len(issueIDs))}
+	ctx, span, t := s.op(ctx, "GetDependentsWithMetadataForIssues", attrs...)
+	v, err := s.inner.GetDependentsWithMetadataForIssues(ctx, issueIDs)
+	s.done(ctx, span, t, err, attrs...)
+	return v, err
+}
+
 // ── Labels ──────────────────────────────────────────────────────────────────
 
 func (s *InstrumentedStorage) AddLabel(ctx context.Context, issueID, label, actor string) error {

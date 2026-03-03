@@ -51,6 +51,11 @@ type Storage interface {
 	GetDependentsWithMetadata(ctx context.Context, issueID string) ([]*types.IssueWithDependencyMetadata, error)
 	GetDependencyTree(ctx context.Context, issueID string, maxDepth int, showAllPaths bool, reverse bool) ([]*types.TreeNode, error)
 
+	// Batched dependency queries
+	GetDependenciesForIssues(ctx context.Context, issueIDs []string) (map[string][]*types.Issue, error)
+	GetDependentsForIssues(ctx context.Context, issueIDs []string) (map[string][]*types.Issue, error)
+	GetDependenciesWithMetadataForIssues(ctx context.Context, issueIDs []string) (map[string][]*types.IssueWithDependencyMetadata, error)
+	GetDependentsWithMetadataForIssues(ctx context.Context, issueIDs []string) (map[string][]*types.IssueWithDependencyMetadata, error)
 	// Labels
 	AddLabel(ctx context.Context, issueID, label, actor string) error
 	RemoveLabel(ctx context.Context, issueID, label, actor string) error

@@ -461,6 +461,40 @@ func (s *DoltStore) GetDependencyRecordsForIssues(ctx context.Context, issueIDs 
 	return s.getDependencyRecordsForIssuesDolt(ctx, issueIDs)
 }
 
+// GetDependenciesForIssues retrieves issues that each issue in the input slice depends on
+func (s *DoltStore) GetDependenciesForIssues(ctx context.Context, issueIDs []string) (map[string][]*types.Issue, error) {
+	if len(issueIDs) == 0 {
+		return make(map[string][]*types.Issue), nil
+	}
+
+	// Partition and merge from wisps and issues tables
+	ephIDs, doltIDs := s.partitionByWispStatus(ctx, issueIDs)
+	if len(ephIDs) > 0 {
+		result := make(map[string][]*types.Issue)
+		for _, id := range ephIDs {
+			deps, err := s.getWispDependencies(ctx, id)
+			if err != nil {
+				return nil, fmt.Errorf("get dependencies for issues: wisp %s: %w", id, err)
+			}
+			if len(deps) > 0 {
+				result[id] = deps
+			}
+		}
+		if len(doltIDs) > 0 {
+			doltResult, err := s.getDependenciesForIssuesDolt(ctx, doltIDs)
+			if err != nil {
+				return nil, fmt.Errorf("get dependencies for issues: dolt: %w", err)
+			}
+			for k, v := range doltResult {
+				result[k] = v
+			}
+		}
+		return result, nil
+	}
+
+	return s.getDependenciesForIssuesDolt(ctx, issueIDs)
+}
+
 func (s *DoltStore) getDependencyRecordsForIssuesDolt(ctx context.Context, issueIDs []string) (map[string][]*types.Dependency, error) {
 	result := make(map[string][]*types.Dependency)
 
@@ -506,6 +540,83 @@ func (s *DoltStore) getDependencyRecordsForIssuesDolt(ctx context.Context, issue
 			return nil, err
 		}
 		_ = rows.Close()
+	}
+
+	return result, nil
+}
+
+// getDependenciesForIssuesDolt retrieves dependencies for multiple issues from the dolt database
+func (s *DoltStore) getDependenciesForIssuesDolt(ctx context.Context, issueIDs []string) (map[string][]*types.Issue, error) {
+	result := make(map[string][]*types.Issue)
+
+	// Batch IN clauses to avoid Dolt query-planner spikes with large ID sets.
+	for start := 0; start < len(issueIDs); start += queryBatchSize {
+		end := start + queryBatchSize
+		if end > len(issueIDs) {
+			end = len(issueIDs)
+		}
+		batch := issueIDs[start:end]
+
+		placeholders := make([]string, len(batch))
+		args := make([]interface{}, len(batch))
+		for i, id := range batch {
+			placeholders[i] = "?"
+			args[i] = id
+		}
+		inClause := strings.Join(placeholders, ",")
+
+		// nolint:gosec // G201: inClause contains only ? placeholders, actual values passed via args
+		query := fmt.Sprintf(`
+			SELECT i.id FROM issues i
+			JOIN dependencies d ON i.id = d.depends_on_id
+			WHERE d.issue_id IN (%s)
+			ORDER BY i.priority ASC, i.created_at DESC
+		`, inClause)
+
+		rows, err := s.queryContext(ctx, query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get dependencies for issues: %w", err)
+		}
+
+		// Collect all dependency IDs first
+		var depIDs []string
+		issueIDToDepIDs := make(map[string][]string)
+		for rows.Next() {
+			var issueID, depID string
+			if err := rows.Scan(&issueID, &depID); err != nil {
+				_ = rows.Close()
+				return nil, fmt.Errorf("failed to scan dependency: %w", err)
+			}
+			depIDs = append(depIDs, depID)
+			issueIDToDepIDs[issueID] = append(issueIDToDepIDs[issueID], depID)
+		}
+		_ = rows.Close()
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+
+		// Fetch all issues in a single batch
+		if len(depIDs) > 0 {
+			issues, err := s.GetIssuesByIDs(ctx, depIDs)
+			if err != nil {
+				return nil, fmt.Errorf("get dependencies for issues: fetch issues: %w", err)
+			}
+
+			// Create a map for quick lookup
+			issueMap := make(map[string]*types.Issue, len(issues))
+			for _, issue := range issues {
+				issueMap[issue.ID] = issue
+			}
+
+			// Build the result map
+			for issueID, ids := range issueIDToDepIDs {
+				for _, id := range ids {
+					if issue, ok := issueMap[id]; ok {
+						result[issueID] = append(result[issueID], issue)
+					}
+				}
+			}
+		}
 	}
 
 	return result, nil
@@ -648,6 +759,361 @@ func (s *DoltStore) GetBlockingInfoForIssues(ctx context.Context, issueIDs []str
 	}
 
 	return blockedByMap, blocksMap, parentMap, nil
+}
+
+// GetDependentsForIssues retrieves issues that depend on each issue in the input slice
+func (s *DoltStore) GetDependentsForIssues(ctx context.Context, issueIDs []string) (map[string][]*types.Issue, error) {
+	if len(issueIDs) == 0 {
+		return make(map[string][]*types.Issue), nil
+	}
+
+	// Partition and merge from wisps and issues tables
+	ephIDs, doltIDs := s.partitionByWispStatus(ctx, issueIDs)
+	if len(ephIDs) > 0 {
+		result := make(map[string][]*types.Issue)
+		for _, id := range ephIDs {
+			deps, err := s.getWispDependents(ctx, id)
+			if err != nil {
+				return nil, fmt.Errorf("get dependents for issues: wisp %s: %w", id, err)
+			}
+			if len(deps) > 0 {
+				result[id] = deps
+			}
+		}
+		if len(doltIDs) > 0 {
+			doltResult, err := s.getDependentsForIssuesDolt(ctx, doltIDs)
+			if err != nil {
+				return nil, fmt.Errorf("get dependents for issues: dolt: %w", err)
+			}
+			for k, v := range doltResult {
+				result[k] = v
+			}
+		}
+		return result, nil
+	}
+
+	return s.getDependentsForIssuesDolt(ctx, issueIDs)
+}
+
+// GetDependenciesWithMetadataForIssues returns dependencies with metadata for multiple issues
+func (s *DoltStore) GetDependenciesWithMetadataForIssues(ctx context.Context, issueIDs []string) (map[string][]*types.IssueWithDependencyMetadata, error) {
+	if len(issueIDs) == 0 {
+		return make(map[string][]*types.IssueWithDependencyMetadata), nil
+	}
+
+	// Partition and merge from wisps and issues tables
+	ephIDs, doltIDs := s.partitionByWispStatus(ctx, issueIDs)
+	if len(ephIDs) > 0 {
+		result := make(map[string][]*types.IssueWithDependencyMetadata)
+		for _, id := range ephIDs {
+			deps, err := s.getWispDependenciesWithMetadata(ctx, id)
+			if err != nil {
+				return nil, fmt.Errorf("get dependencies with metadata for issues: wisp %s: %w", id, err)
+			}
+			if len(deps) > 0 {
+				result[id] = deps
+			}
+		}
+		if len(doltIDs) > 0 {
+			doltResult, err := s.getDependenciesWithMetadataForIssuesDolt(ctx, doltIDs)
+			if err != nil {
+				return nil, fmt.Errorf("get dependencies with metadata for issues: dolt: %w", err)
+			}
+			for k, v := range doltResult {
+				result[k] = v
+			}
+		}
+		return result, nil
+	}
+
+	return s.getDependenciesWithMetadataForIssuesDolt(ctx, issueIDs)
+}
+
+// GetDependentsWithMetadataForIssues returns dependents with metadata for multiple issues
+func (s *DoltStore) GetDependentsWithMetadataForIssues(ctx context.Context, issueIDs []string) (map[string][]*types.IssueWithDependencyMetadata, error) {
+	if len(issueIDs) == 0 {
+		return make(map[string][]*types.IssueWithDependencyMetadata), nil
+	}
+
+	// Partition and merge from wisps and issues tables
+	ephIDs, doltIDs := s.partitionByWispStatus(ctx, issueIDs)
+	if len(ephIDs) > 0 {
+		result := make(map[string][]*types.IssueWithDependencyMetadata)
+		for _, id := range ephIDs {
+			deps, err := s.getWispDependentsWithMetadata(ctx, id)
+			if err != nil {
+				return nil, fmt.Errorf("get dependents with metadata for issues: wisp %s: %w", id, err)
+			}
+			if len(deps) > 0 {
+				result[id] = deps
+			}
+		}
+		if len(doltIDs) > 0 {
+			doltResult, err := s.getDependentsWithMetadataForIssuesDolt(ctx, doltIDs)
+			if err != nil {
+				return nil, fmt.Errorf("get dependents with metadata for issues: dolt: %w", err)
+			}
+			for k, v := range doltResult {
+				result[k] = v
+			}
+		}
+		return result, nil
+	}
+
+	return s.getDependentsWithMetadataForIssuesDolt(ctx, issueIDs)
+}
+
+// getDependentsForIssuesDolt retrieves dependents for multiple issues from the dolt database
+func (s *DoltStore) getDependentsForIssuesDolt(ctx context.Context, issueIDs []string) (map[string][]*types.Issue, error) {
+	result := make(map[string][]*types.Issue)
+
+	// Batch IN clauses to avoid Dolt query-planner spikes with large ID sets.
+	for start := 0; start < len(issueIDs); start += queryBatchSize {
+		end := start + queryBatchSize
+		if end > len(issueIDs) {
+			end = len(issueIDs)
+		}
+		batch := issueIDs[start:end]
+
+		placeholders := make([]string, len(batch))
+		args := make([]interface{}, len(batch))
+		for i, id := range batch {
+			placeholders[i] = "?"
+			args[i] = id
+		}
+		inClause := strings.Join(placeholders, ",")
+
+		// nolint:gosec // G201: inClause contains only ? placeholders, actual values passed via args
+		query := fmt.Sprintf(`
+			SELECT i.id FROM issues i
+			JOIN dependencies d ON i.id = d.issue_id
+			WHERE d.depends_on_id IN (%s)
+			ORDER BY i.priority ASC, i.created_at DESC
+		`, inClause)
+
+		rows, err := s.queryContext(ctx, query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get dependents for issues: %w", err)
+		}
+
+		// Collect all dependent IDs first
+		var depIDs []string
+		issueIDToDepIDs := make(map[string][]string)
+		for rows.Next() {
+			var issueID, depID string
+			if err := rows.Scan(&issueID, &depID); err != nil {
+				_ = rows.Close()
+				return nil, fmt.Errorf("failed to scan dependent: %w", err)
+			}
+			depIDs = append(depIDs, depID)
+			issueIDToDepIDs[issueID] = append(issueIDToDepIDs[issueID], depID)
+		}
+		_ = rows.Close()
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+
+		// Fetch all issues in a single batch
+		if len(depIDs) > 0 {
+			issues, err := s.GetIssuesByIDs(ctx, depIDs)
+			if err != nil {
+				return nil, fmt.Errorf("get dependents for issues: fetch issues: %w", err)
+			}
+
+			// Create a map for quick lookup
+			issueMap := make(map[string]*types.Issue, len(issues))
+			for _, issue := range issues {
+				issueMap[issue.ID] = issue
+			}
+
+			// Build the result map
+			for issueID, ids := range issueIDToDepIDs {
+				for _, id := range ids {
+					if issue, ok := issueMap[id]; ok {
+						result[issueID] = append(result[issueID], issue)
+					}
+				}
+			}
+		}
+	}
+
+	return result, nil
+}
+
+// getDependenciesWithMetadataForIssuesDolt retrieves dependencies with metadata for multiple issues from the dolt database
+func (s *DoltStore) getDependenciesWithMetadataForIssuesDolt(ctx context.Context, issueIDs []string) (map[string][]*types.IssueWithDependencyMetadata, error) {
+	result := make(map[string][]*types.IssueWithDependencyMetadata)
+
+	// Batch IN clauses to avoid Dolt query-planner spikes with large ID sets.
+	for start := 0; start < len(issueIDs); start += queryBatchSize {
+		end := start + queryBatchSize
+		if end > len(issueIDs) {
+			end = len(issueIDs)
+		}
+		batch := issueIDs[start:end]
+
+		placeholders := make([]string, len(batch))
+		args := make([]interface{}, len(batch))
+		for i, id := range batch {
+			placeholders[i] = "?"
+			args[i] = id
+		}
+		inClause := strings.Join(placeholders, ",")
+
+		// nolint:gosec // G201: inClause contains only ? placeholders, actual values passed via args
+		query := fmt.Sprintf(`
+			SELECT d.depends_on_id, d.type, d.created_at, d.created_by, d.metadata, d.thread_id, d.issue_id
+			FROM dependencies d
+			WHERE d.issue_id IN (%s)
+		`, inClause)
+
+		rows, err := s.queryContext(ctx, query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get dependencies with metadata for issues: %w", err)
+		}
+
+		// Collect dep metadata first, then close rows before fetching issues.
+		// This avoids connection pool deadlock when MaxOpenConns=1 (embedded dolt).
+		type depMeta struct {
+			depID, depType, issueID string
+		}
+		var deps []depMeta
+		for rows.Next() {
+			var depID, depType, createdBy, issueID string
+			var createdAt sql.NullTime
+			var metadata, threadID sql.NullString
+
+			if err := rows.Scan(&depID, &depType, &createdAt, &createdBy, &metadata, &threadID, &issueID); err != nil {
+				_ = rows.Close() // Best effort cleanup on error path
+				return nil, fmt.Errorf("failed to scan dependency: %w", err)
+			}
+			deps = append(deps, depMeta{depID: depID, depType: depType, issueID: issueID})
+		}
+		if err := rows.Err(); err != nil {
+			_ = rows.Close() // Best effort cleanup on error path
+			return nil, wrapQueryError("get dependencies with metadata for issues: rows", err)
+		}
+		_ = rows.Close() // Redundant close for safety (rows already iterated)
+
+		if len(deps) == 0 {
+			continue
+		}
+
+		// Batch-fetch all issues after rows are closed (connection released)
+		ids := make([]string, len(deps))
+		for i, d := range deps {
+			ids[i] = d.depID
+		}
+		issues, err := s.GetIssuesByIDs(ctx, ids)
+		if err != nil {
+			return nil, fmt.Errorf("get dependencies with metadata for issues: fetch issues: %w", err)
+		}
+		issueMap := make(map[string]*types.Issue, len(issues))
+		for _, iss := range issues {
+			issueMap[iss.ID] = iss
+		}
+
+		for _, d := range deps {
+			issue, ok := issueMap[d.depID]
+			if !ok {
+				continue
+			}
+			result[d.issueID] = append(result[d.issueID], &types.IssueWithDependencyMetadata{
+				Issue:          *issue,
+				DependencyType: types.DependencyType(d.depType),
+			})
+		}
+	}
+	return result, nil
+}
+
+// getDependentsWithMetadataForIssuesDolt retrieves dependents with metadata for multiple issues from the dolt database
+func (s *DoltStore) getDependentsWithMetadataForIssuesDolt(ctx context.Context, issueIDs []string) (map[string][]*types.IssueWithDependencyMetadata, error) {
+	result := make(map[string][]*types.IssueWithDependencyMetadata)
+
+	// Batch IN clauses to avoid Dolt query-planner spikes with large ID sets.
+	for start := 0; start < len(issueIDs); start += queryBatchSize {
+		end := start + queryBatchSize
+		if end > len(issueIDs) {
+			end = len(issueIDs)
+		}
+		batch := issueIDs[start:end]
+
+		placeholders := make([]string, len(batch))
+		args := make([]interface{}, len(batch))
+		for i, id := range batch {
+			placeholders[i] = "?"
+			args[i] = id
+		}
+		inClause := strings.Join(placeholders, ",")
+
+		// nolint:gosec // G201: inClause contains only ? placeholders, actual values passed via args
+		query := fmt.Sprintf(`
+			SELECT d.issue_id, d.type, d.created_at, d.created_by, d.metadata, d.thread_id
+			FROM dependencies d
+			WHERE d.depends_on_id IN (%s)
+		`, inClause)
+
+		rows, err := s.queryContext(ctx, query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get dependents with metadata for issues: %w", err)
+		}
+
+		// Collect dep metadata first, then close rows before fetching issues.
+		// This avoids connection pool deadlock when MaxOpenConns=1 (embedded dolt).
+		type depMeta struct {
+			issueID, depType string
+		}
+		var deps []depMeta
+		for rows.Next() {
+			var issueID, depType, createdBy string
+			var createdAt sql.NullTime
+			var metadata, threadID sql.NullString
+
+			if err := rows.Scan(&issueID, &depType, &createdAt, &createdBy, &metadata, &threadID); err != nil {
+				_ = rows.Close() // Best effort cleanup on error path
+				return nil, fmt.Errorf("failed to scan dependent: %w", err)
+			}
+			deps = append(deps, depMeta{issueID: issueID, depType: depType})
+		}
+		if err := rows.Err(); err != nil {
+			_ = rows.Close() // Best effort cleanup on error path
+			return nil, wrapQueryError("get dependents with metadata for issues: rows", err)
+		}
+		_ = rows.Close() // Redundant close for safety (rows already iterated)
+
+		if len(deps) == 0 {
+			continue
+		}
+
+		// Batch-fetch all issues after rows are closed (connection released)
+		ids := make([]string, len(deps))
+		for i, d := range deps {
+			ids[i] = d.issueID
+		}
+		issues, err := s.GetIssuesByIDs(ctx, ids)
+		if err != nil {
+			return nil, fmt.Errorf("get dependents with metadata for issues: fetch issues: %w", err)
+		}
+		issueMap := make(map[string]*types.Issue, len(issues))
+		for _, iss := range issues {
+			issueMap[iss.ID] = iss
+		}
+
+		// Build the result map
+		for _, d := range deps {
+			issue, ok := issueMap[d.issueID]
+			if !ok {
+				continue
+			}
+			result[d.issueID] = append(result[d.issueID], &types.IssueWithDependencyMetadata{
+				Issue:          *issue,
+				DependencyType: types.DependencyType(d.depType),
+			})
+		}
+	}
+
+	return result, nil
 }
 
 // GetDependencyCounts returns dependency counts for multiple issues
